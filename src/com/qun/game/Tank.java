@@ -18,10 +18,27 @@ import java.util.List;
  * 坦克类
  */
 public class Tank {
-    //中心位置
-    private int x , y;
+    //坦克的图片数组
+    public static Image[] tankImg;
+    //敌军坦克
+    public static Image[] enemyImg;
+    //在静态块初始化
+    {
+        tankImg = new Image[4];
+        tankImg[0] = Toolkit.getDefaultToolkit().createImage("res/brown/up.png");
+        tankImg[1] = Toolkit.getDefaultToolkit().createImage("res/brown/down.png");
+        tankImg[2] = Toolkit.getDefaultToolkit().createImage("res/brown/left.png");
+        tankImg[3] = Toolkit.getDefaultToolkit().createImage("res/brown/right.png");
+
+        enemyImg = new Image[4];
+        enemyImg[0] = Toolkit.getDefaultToolkit().createImage("res/yellow/up.png");
+        enemyImg[1] = Toolkit.getDefaultToolkit().createImage("res/yellow/down.png");
+        enemyImg[2] = Toolkit.getDefaultToolkit().createImage("res/yellow/left.png");
+        enemyImg[3] = Toolkit.getDefaultToolkit().createImage("res/yellow/right.png");
+    }
+
     //半径
-    public static final int RADIUS = 27;
+    public static final int RADIUS = 37;
 
     //默认速度 每帧跑4跑pm，4pm/30ms
     public static final int DEFAULT_SPEED = 4;
@@ -40,6 +57,7 @@ public class Tank {
     //坦克的初始HP
     public static final int DEFAULT_HP = 1000;
 
+    private int x , y;//中心位置
     private int hp;
     private int atk;
     private int speed = DEFAULT_SPEED;
@@ -59,17 +77,27 @@ public class Tank {
     }
 
     /**
-     * 绘制坦克
+     * 绘制图像
      * @param g
      */
     public void draw(Graphics g){
         logic();
-        drawTank(g);
+        drawImgTank(g);
         drawBullets(g);
     }
 
     /**
-     * 绘制坦克
+     * 图片绘制坦克
+     * @param g
+     */
+    private void drawImgTank(Graphics g){
+        g.drawImage(tankImg[dir],x-RADIUS,y-RADIUS,null);
+    }
+
+
+
+    /**
+     * 系统绘制坦克
      * @param g
      */
     private void drawTank(Graphics g){
@@ -121,10 +149,10 @@ public class Tank {
         int bulletY = y;
 
         switch (dir){
-            case DIR_UP: bulletY -= RADIUS << 1; break;
-            case DIR_DOWN: bulletY += RADIUS << 1; break;
-            case DIR_LEFT: bulletX -= RADIUS << 1; break;
-            case DIR_RIGHT: bulletX += RADIUS << 1; break;
+            case DIR_UP: bulletY -= RADIUS; break;
+            case DIR_DOWN: bulletY += RADIUS; break;
+            case DIR_LEFT: bulletX -= RADIUS; break;
+            case DIR_RIGHT: bulletX += RADIUS; break;
         }
 
         Bullet bullet = new Bullet(bulletX, bulletY, dir, atk, color);
