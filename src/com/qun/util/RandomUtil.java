@@ -11,8 +11,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RandomColorUtil {
-    private RandomColorUtil(){}
+public class RandomUtil {
+    private RandomUtil(){}
 
     /**
      * 得到指定区间的随机数

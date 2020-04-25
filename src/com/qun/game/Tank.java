@@ -8,7 +8,8 @@
 package com.qun.game;
 
 import com.qun.config.Constant;
-import com.qun.util.RandomColorUtil;
+import com.qun.util.BulletPool;
+import com.qun.util.RandomUtil;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -64,17 +65,43 @@ public class Tank {
     private int dir;
     private int state = STATE_STOP;
     private Color color;
+    private boolean isEnemy = false;
 
     //炮弹
     private List<Bullet> bullets = new ArrayList();
 
-
+    /**
+     * 创建的玩家的坦克
+     * @param x 玩家的出生地
+     * @param y
+     * @param dir
+     */
     public Tank(int x, int y, int dir) {
         this.x = x;
         this.y = y;
         this.dir = dir;
-        color = RandomColorUtil.getRandomColor();
+        color = RandomUtil.getRandomColor();
     }
+
+    /**
+     * 创建敌人坦克
+     * @return
+     */
+    public static Tank createEnemy(){
+        int x = RandomUtil.getRandomNumber(0,2) == 0 ? RADIUS : Constant.FRAME_WIDTH - RADIUS;
+        int y = GameFrame.titleBarH + RADIUS;
+        int dir = DIR_DOWN;
+
+        Tank enemy = new Tank(x,y,dir);
+        enemy.isEnemy = true;
+
+//        TODO
+        enemy.state = STATE_MOVE;
+
+        return enemy;
+    }
+
+
 
     /**
      * 绘制图像
@@ -91,7 +118,12 @@ public class Tank {
      * @param g
      */
     private void drawImgTank(Graphics g){
-        g.drawImage(tankImg[dir],x-RADIUS,y-RADIUS,null);
+        if (isEnemy){
+            g.drawImage(enemyImg[dir],x-RADIUS,y-RADIUS,null);
+        }else {
+            g.drawImage(tankImg[dir],x-RADIUS,y-RADIUS,null);
+        }
+
     }
 
 
@@ -155,7 +187,9 @@ public class Tank {
             case DIR_RIGHT: bulletX += RADIUS; break;
         }
 
-        Bullet bullet = new Bullet(bulletX, bulletY, dir, atk, color);
+        Bullet bullet = BulletPool.getBullet();
+
+        bullet.initBulletByPool(bulletX, bulletY, dir, atk, color, true);
 
         bullets.add(bullet);
     }
@@ -168,6 +202,18 @@ public class Tank {
         for (Bullet bullet : bullets) {
             bullet.draw(g);
         }
+
+        for (int i = 0; i < bullets.size(); i++) {
+            Bullet bullet = bullets.get(i);
+            if (!bullet.isVisible()){
+                BulletPool.returnBullet(bullets.remove(i));
+            }
+        }
+
+//        if (!(bullets.size()==0)){
+//            System.out.println("坦克炮弹的数量"+bullets.size());
+//        }
+
     }
 
 

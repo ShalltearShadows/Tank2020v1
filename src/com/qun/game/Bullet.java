@@ -8,6 +8,8 @@
 package com.qun.game;
 
 
+import com.qun.config.Constant;
+
 import java.awt.*;
 
 /**
@@ -26,6 +28,12 @@ public class Bullet {
     private int atk;
     private Color color;
 
+    //炮弹是否可见
+    private boolean visible = true;
+
+    //给对象池用的
+    public Bullet(){}
+
     public Bullet(int x, int y, int dir, int atk, Color color) {
         this.x = x;
         this.y = y;
@@ -39,6 +47,7 @@ public class Bullet {
      * @param g
      */
     public void draw(Graphics g){
+        if (!visible)return;
         logic();
         g.setColor(color);
         g.fillOval(x-RADIUS,y-RADIUS,RADIUS<<1,RADIUS<<1);
@@ -53,11 +62,24 @@ public class Bullet {
 
     private void move(){
         switch (dir){
-            case Tank.DIR_UP: y -= speed; break;
-            case Tank.DIR_DOWN: y += speed; break;
-            case Tank.DIR_LEFT: x -= speed; break;
-            case Tank.DIR_RIGHT: x += speed; break;
+            case Tank.DIR_UP: y -= speed; if (y<0) visible=false; break;
+            case Tank.DIR_DOWN: y += speed; if (y>Constant.FRAME_HEIGHT) visible=false; break;
+            case Tank.DIR_LEFT: x -= speed; if (x<0) visible=false; break;
+            case Tank.DIR_RIGHT: x += speed; if (x>Constant.FRAME_WIDTH) visible=false; break;
         }
+    }
+
+    /**
+     * 对象池初始化
+     * @return
+     */
+    public void initBulletByPool(int x, int y, int dir, int atk, Color color, Boolean visible) {
+        this.x = x;
+        this.y = y;
+        this.dir = dir;
+        this.atk = atk;
+        this.color = color;
+        this.visible = visible;
     }
     public int getSpeed() {
         return speed;
@@ -97,5 +119,13 @@ public class Bullet {
 
     public void setAtk(int atk) {
         this.atk = atk;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 }

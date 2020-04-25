@@ -6,11 +6,14 @@
  * @Time: 11:01
  */
 package com.qun.game;
+
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.qun.config.Constant.*;
 
@@ -33,6 +36,9 @@ public class GameFrame extends Frame implements Runnable{
 
     //定义坦克对象
     private Tank myTank;
+
+    //敌人的坦克
+    private List<Tank> enemies = new ArrayList<>();
 
     /**
      * 对窗口进行初始化
@@ -196,14 +202,22 @@ public class GameFrame extends Frame implements Runnable{
 
     }
 
+    //游戏运行状态的绘制
     private void drawRun(Graphics g) {
         //绘制黑色的背景
         g.setColor(Color.BLACK);
         g.fillRect( 0, 0, FRAME_WIDTH, FRAME_HEIGHT) ;
 
+        drawEnemies(g);
+
         myTank.draw(g);
 
+    }
 
+    private void drawEnemies(Graphics g){
+        for (Tank enemy : enemies) {
+            enemy.draw(g);
+        }
     }
 
     private void drawAbout(Graphics g) {
@@ -253,6 +267,24 @@ public class GameFrame extends Frame implements Runnable{
         gameState = STATE_RUN;
         //创建坦克对象，敌人的坦克对象
         myTank = new Tank(400,200, Tank.DIR_DOWN);
+
+        //使用单独一个线程用于控制产生敌人的坦克
+        new Thread(){
+            @Override
+            public void run() {
+                while (true){
+                    if (enemies.size() < ENEMY_MAX_COUNT){
+                        Tank enemy = Tank.createEnemy();
+                        enemies.add(enemy);
+                    }
+                    try {
+                        Thread.sleep(ENEMY_BORN_INTERVAL);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
     }
 
     private void KeyPressedEventOver(int keyCode) {

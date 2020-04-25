@@ -50,4 +50,10 @@ public class Constant {
 
     //FPS
     public static final int REPAINT_INTERVAL = 37;
+
+    //最大敌人坦克数量10
+    public static final int ENEMY_MAX_COUNT = 10;
+
+    //敌人的出生间隔
+    public static final int ENEMY_BORN_INTERVAL = 5000;
 }
