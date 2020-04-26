@@ -5,7 +5,7 @@
  * @Date: 2020/4/24
  * @Time: 9:54
  */
-package com.qun.game;
+package com.qun.pojo;
 
 
 import com.qun.config.Constant;

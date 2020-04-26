@@ -5,9 +5,10 @@
  * @Date: 2020/4/23
  * @Time: 8:34
  */
-package com.qun.game;
+package com.qun.pojo;
 
 import com.qun.config.Constant;
+import com.qun.game.GameFrame;
 import com.qun.util.BulletPool;
 import com.qun.util.RandomUtil;
 
@@ -18,25 +19,7 @@ import java.util.List;
 /**
  * 坦克类
  */
-public class Tank {
-    //坦克的图片数组
-    public static Image[] tankImg;
-    //敌军坦克
-    public static Image[] enemyImg;
-    //在静态块初始化
-    {
-        tankImg = new Image[4];
-        tankImg[0] = Toolkit.getDefaultToolkit().createImage("res/brown/up.png");
-        tankImg[1] = Toolkit.getDefaultToolkit().createImage("res/brown/down.png");
-        tankImg[2] = Toolkit.getDefaultToolkit().createImage("res/brown/left.png");
-        tankImg[3] = Toolkit.getDefaultToolkit().createImage("res/brown/right.png");
-
-        enemyImg = new Image[4];
-        enemyImg[0] = Toolkit.getDefaultToolkit().createImage("res/yellow/up.png");
-        enemyImg[1] = Toolkit.getDefaultToolkit().createImage("res/yellow/down.png");
-        enemyImg[2] = Toolkit.getDefaultToolkit().createImage("res/yellow/left.png");
-        enemyImg[3] = Toolkit.getDefaultToolkit().createImage("res/yellow/right.png");
-    }
+public abstract class Tank {
 
     //半径
     public static final int RADIUS = 37;
@@ -83,23 +66,6 @@ public class Tank {
         color = RandomUtil.getRandomColor();
     }
 
-    /**
-     * 创建敌人坦克
-     * @return
-     */
-    public static Tank createEnemy(){
-        int x = RandomUtil.getRandomNumber(0,2) == 0 ? RADIUS : Constant.FRAME_WIDTH - RADIUS;
-        int y = GameFrame.titleBarH + RADIUS;
-        int dir = DIR_DOWN;
-
-        Tank enemy = new Tank(x,y,dir);
-        enemy.isEnemy = true;
-
-//        TODO
-        enemy.state = STATE_MOVE;
-
-        return enemy;
-    }
 
 
 
@@ -117,14 +83,7 @@ public class Tank {
      * 图片绘制坦克
      * @param g
      */
-    private void drawImgTank(Graphics g){
-        if (isEnemy){
-            g.drawImage(enemyImg[dir],x-RADIUS,y-RADIUS,null);
-        }else {
-            g.drawImage(tankImg[dir],x-RADIUS,y-RADIUS,null);
-        }
-
-    }
+    public abstract void drawImgTank(Graphics g);
 
 
 
@@ -280,5 +239,13 @@ public class Tank {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public boolean isEnemy() {
+        return isEnemy;
+    }
+
+    public void setEnemy(boolean enemy) {
+        isEnemy = enemy;
     }
 }

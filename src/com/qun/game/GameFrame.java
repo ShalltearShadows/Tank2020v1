@@ -7,6 +7,10 @@
  */
 package com.qun.game;
 
+import com.qun.pojo.EnemyTank;
+import com.qun.pojo.MyTank;
+import com.qun.pojo.Tank;
+
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -266,7 +270,7 @@ public class GameFrame extends Frame implements Runnable{
     private void newGame() {
         gameState = STATE_RUN;
         //创建坦克对象，敌人的坦克对象
-        myTank = new Tank(400,200, Tank.DIR_DOWN);
+        myTank = new MyTank(400,200, Tank.DIR_DOWN);
 
         //使用单独一个线程用于控制产生敌人的坦克
         new Thread(){
@@ -274,7 +278,7 @@ public class GameFrame extends Frame implements Runnable{
             public void run() {
                 while (true){
                     if (enemies.size() < ENEMY_MAX_COUNT){
-                        Tank enemy = Tank.createEnemy();
+                        Tank enemy = EnemyTank.createEnemy();
                         enemies.add(enemy);
                     }
                     try {

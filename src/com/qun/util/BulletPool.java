@@ -7,7 +7,7 @@
  */
 package com.qun.util;
 
-import com.qun.game.Bullet;
+import com.qun.pojo.Bullet;
 
 import java.util.ArrayList;
 import java.util.List;
