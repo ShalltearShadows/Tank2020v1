@@ -1,6 +1,4 @@
-package com.qun;
-
-import com.qun.game.GameFrame;
+package com.qun.game;
 
 /**
  * Created by IntelliJ IDEA.

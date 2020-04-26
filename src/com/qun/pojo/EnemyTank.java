@@ -9,6 +9,7 @@ package com.qun.pojo;
 
 import com.qun.config.Constant;
 import com.qun.game.GameFrame;
+import com.qun.util.ImageUtil;
 import com.qun.util.RandomUtil;
 
 import java.awt.*;
@@ -43,10 +44,10 @@ public class EnemyTank extends Tank {
     //在静态块初始化
     {
         enemyImg = new Image[4];
-        enemyImg[0] = Toolkit.getDefaultToolkit().createImage("res/yellow/up.png");
-        enemyImg[1] = Toolkit.getDefaultToolkit().createImage("res/yellow/down.png");
-        enemyImg[2] = Toolkit.getDefaultToolkit().createImage("res/yellow/left.png");
-        enemyImg[3] = Toolkit.getDefaultToolkit().createImage("res/yellow/right.png");
+        enemyImg[0] = ImageUtil.createImage("res/yellow/up.png");
+        enemyImg[1] = ImageUtil.createImage("res/yellow/down.png");
+        enemyImg[2] = ImageUtil.createImage("res/yellow/left.png");
+        enemyImg[3] = ImageUtil.createImage("res/yellow/right.png");
     }
 
 

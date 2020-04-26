@@ -7,6 +7,8 @@
  */
 package com.qun.pojo;
 
+import com.qun.util.ImageUtil;
+
 import java.awt.*;
 
 
@@ -34,10 +36,10 @@ public class MyTank extends Tank {
     //在静态块初始化
     {
         tankImg = new Image[4];
-        tankImg[0] = Toolkit.getDefaultToolkit().createImage("res/brown/up.png");
-        tankImg[1] = Toolkit.getDefaultToolkit().createImage("res/brown/down.png");
-        tankImg[2] = Toolkit.getDefaultToolkit().createImage("res/brown/left.png");
-        tankImg[3] = Toolkit.getDefaultToolkit().createImage("res/brown/right.png");
+        tankImg[0] = ImageUtil.createImage("res/brown/up.png");
+        tankImg[1] = ImageUtil.createImage("res/brown/down.png");
+        tankImg[2] = ImageUtil.createImage("res/brown/left.png");
+        tankImg[3] = ImageUtil.createImage("res/brown/right.png");
     }
 
 

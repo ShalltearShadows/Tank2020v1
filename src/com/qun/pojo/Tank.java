@@ -8,6 +8,7 @@
 package com.qun.pojo;
 
 import com.qun.config.Constant;
+import com.qun.game.Explode;
 import com.qun.game.GameFrame;
 import com.qun.util.BulletPool;
 import com.qun.util.Collide;
@@ -53,6 +54,9 @@ public abstract class Tank {
 
     //炮弹
     private List<Bullet> bullets = new ArrayList();
+
+    //爆炸
+    private List<Explode> explodes = new ArrayList<>();
 
 
     /**
@@ -181,17 +185,31 @@ public abstract class Tank {
     public void collideBullets(List<Bullet> bullets){
         //遍历所有的炮弹是否和当前的坦克碰撞
         for (Bullet bullet : bullets) {
+
+            int bulletX = bullet.getX();
+            int bulletY = bullet.getY();
+
             //炮弹和坦克碰上了
-            if (Collide.isCollide(x,y,RADIUS,bullet.getX(),bullet.getY())){
+            if (Collide.isCollide(x,y,RADIUS,bulletX,bulletY)){
                 //炮弹消失
                 bullet.setVisible(false);
                 //坦克收到伤害
                 //添加爆炸效果
+                explodes.add(new Explode(bulletX,bulletY));
             }
         }
 
     }
 
+    /**
+     * 绘制当前坦克.上的所有的爆炸的效果
+     * @param g
+     */
+    public void drawExplodes(Graphics g) {
+        for (Explode exp1ode : explodes) {
+            exp1ode.draw(g);
+        }
+    }
 
     public int getX() {
         return x;
