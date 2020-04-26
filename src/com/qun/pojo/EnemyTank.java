@@ -22,6 +22,9 @@ public class EnemyTank extends Tank {
     //敌军坦克
     public static Image[] enemyImg;
 
+    //记录敌人的秒龄
+    private long aiTime;
+
 
     /**
      * 创建的敌军的坦克
@@ -32,6 +35,8 @@ public class EnemyTank extends Tank {
      */
     public EnemyTank(int x, int y, int dir) {
         super(x, y, dir);
+        //敌人一创建就计时
+        aiTime = System.currentTimeMillis();
     }
 
 
@@ -65,6 +70,25 @@ public class EnemyTank extends Tank {
 
     @Override
     public void drawImgTank(Graphics g){
+        ai();
         g.drawImage(enemyImg[getDir()],getX()-RADIUS,getY()-RADIUS,null);
+    }
+
+
+    /**
+     * 敌人的AI
+     */
+    private void ai(){
+        if (System.currentTimeMillis() - aiTime > Constant.ENEMY_AI_INTERVAL){
+            //给敌人随机一个停止或移动的状态，并随机改变其方向
+            setDir(RandomUtil.getRandomNumber(DIR_UP,DIR_RIGHT+1));
+            setState(RandomUtil.getRandomNumber(0,2) == 0 ? STATE_STOP : STATE_MOVE);
+            aiTime = System.currentTimeMillis();
+        }
+
+        //敌人的随机开火
+        if (Math.random() < Constant.ENEMY_FIRE_PERCENT){
+            fire();
+        }
     }
 }

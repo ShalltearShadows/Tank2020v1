@@ -10,6 +10,7 @@ package com.qun.pojo;
 import com.qun.config.Constant;
 import com.qun.game.GameFrame;
 import com.qun.util.BulletPool;
+import com.qun.util.Collide;
 import com.qun.util.RandomUtil;
 
 import java.awt.*;
@@ -52,6 +53,7 @@ public abstract class Tank {
 
     //炮弹
     private List<Bullet> bullets = new ArrayList();
+
 
     /**
      * 创建的玩家的坦克
@@ -169,12 +171,26 @@ public abstract class Tank {
             }
         }
 
-//        if (!(bullets.size()==0)){
-//            System.out.println("坦克炮弹的数量"+bullets.size());
-//        }
 
     }
 
+    /**
+     * 坦克和炮弹碰撞的方法
+     * @return
+     */
+    public void collideBullets(List<Bullet> bullets){
+        //遍历所有的炮弹是否和当前的坦克碰撞
+        for (Bullet bullet : bullets) {
+            //炮弹和坦克碰上了
+            if (Collide.isCollide(x,y,RADIUS,bullet.getX(),bullet.getY())){
+                //炮弹消失
+                bullet.setVisible(false);
+                //坦克收到伤害
+                //添加爆炸效果
+            }
+        }
+
+    }
 
 
     public int getX() {
@@ -247,5 +263,14 @@ public abstract class Tank {
 
     public void setEnemy(boolean enemy) {
         isEnemy = enemy;
+    }
+
+
+    public List<Bullet> getBullets() {
+        return bullets;
+    }
+
+    public void setBullets(List<Bullet> bullets) {
+        this.bullets = bullets;
     }
 }

@@ -216,6 +216,9 @@ public class GameFrame extends Frame implements Runnable{
 
         myTank.draw(g);
 
+        //坦克与炮弹碰撞的判断
+        bulletCollideTank();
+
     }
 
     private void drawEnemies(Graphics g){
@@ -334,6 +337,21 @@ public class GameFrame extends Frame implements Runnable{
             case KeyEvent.VK_D: myTank.setState(Tank.STATE_STOP); break;
         }
 
+    }
+
+
+    /**
+     * 炮弹与坦克相碰
+     */
+    private void bulletCollideTank(){
+        //玩家的炮弹射中了敌人
+        for (Tank enemy : enemies) {
+            enemy.collideBullets(myTank.getBullets());
+        }
+        //敌人的炮弹射中了玩家
+        for (Tank enemy : enemies) {
+            myTank.collideBullets(enemy.getBullets());
+        }
     }
 
 
