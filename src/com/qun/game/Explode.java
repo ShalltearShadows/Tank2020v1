@@ -28,6 +28,9 @@ public class Explode {
     //是否可见
     private boolean visible = true;
 
+    public Explode() {
+        index = 0;
+    }
 
     public Explode(int x, int y) {
         this.x = x;

@@ -54,6 +54,7 @@ public class Constant {
 
     //字体
     public static final Font FONT = new Font("宋体",Font.BOLD,24);
+    public static final Font SIMALL_FONT = new Font("宋体",Font.BOLD,12);
 
     //FPS
     public static final int REPAINT_INTERVAL = 37;

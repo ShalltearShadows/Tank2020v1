@@ -10,13 +10,13 @@ package com.qun.pojo;
 import com.qun.config.Constant;
 import com.qun.game.Explode;
 import com.qun.game.GameFrame;
-import com.qun.util.BulletPool;
-import com.qun.util.Collide;
-import com.qun.util.RandomUtil;
+import com.qun.util.*;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.qun.config.Constant.*;
 
 /**
  * 坦克类
@@ -43,6 +43,8 @@ public abstract class Tank {
     //坦克的初始HP
     public static final int DEFAULT_HP = 1000;
 
+
+    private String name;
     private int x , y;//中心位置
     private int hp;
     private int atk;
@@ -70,6 +72,7 @@ public abstract class Tank {
         this.y = y;
         this.dir = dir;
         color = RandomUtil.getRandomColor();
+        name = RandomUtil.getRandomName();
     }
 
 
@@ -83,6 +86,15 @@ public abstract class Tank {
         logic();
         drawImgTank(g);
         drawBullets(g);
+        drawName(g);
+    }
+    /**
+     * 绘制坦克名字
+     */
+    private void drawName(Graphics g){
+        g.setFont(SIMALL_FONT);
+        g.setColor(color);
+        g.drawString(name,x-RADIUS+5,y-RADIUS-20);
     }
 
     /**
@@ -172,6 +184,7 @@ public abstract class Tank {
             Bullet bullet = bullets.get(i);
             if (!bullet.isVisible()){
                 BulletPool.returnBullet(bullets.remove(i));
+                i--;
             }
         }
 
@@ -195,7 +208,12 @@ public abstract class Tank {
                 bullet.setVisible(false);
                 //坦克收到伤害
                 //添加爆炸效果
-                explodes.add(new Explode(bulletX,bulletY));
+                Explode explode = ExplodePool.getExplode();
+                explode.setX(bulletX);
+                explode.setY(bulletY);
+                explode.setVisible(true);
+                explode.setIndex(0);
+                explodes.add(explode);
             }
         }
 
@@ -208,6 +226,15 @@ public abstract class Tank {
     public void drawExplodes(Graphics g) {
         for (Explode exp1ode : explodes) {
             exp1ode.draw(g);
+        }
+
+        for (int i = 0; i < explodes.size(); i++) {
+            Explode explode = explodes.get(i);
+            if (!explode.isVisible()){
+                Explode remove = explodes.remove(i);
+                ExplodePool.returnExplode(remove);
+                i--;
+            }
         }
     }
 
@@ -290,5 +317,13 @@ public abstract class Tank {
 
     public void setBullets(List<Bullet> bullets) {
         this.bullets = bullets;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
