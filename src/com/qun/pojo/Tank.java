@@ -46,13 +46,14 @@ public abstract class Tank {
 
     private String name;
     private int x , y;//中心位置
-    private int hp;
+    private int hp = DEFAULT_HP;
     private int atk;
     private int speed = DEFAULT_SPEED;
     private int dir;
     private int state = STATE_STOP;
     private Color color;
     private boolean isEnemy = false;
+    private BloodBar bloodBar = new BloodBar();
 
     //炮弹
     private List<Bullet> bullets = new ArrayList();
@@ -73,6 +74,7 @@ public abstract class Tank {
         this.dir = dir;
         color = RandomUtil.getRandomColor();
         name = RandomUtil.getRandomName();
+        atk = 99;
     }
 
 
@@ -87,6 +89,7 @@ public abstract class Tank {
         drawImgTank(g);
         drawBullets(g);
         drawName(g);
+        bloodBar.draw(g);
     }
     /**
      * 绘制坦克名字
@@ -94,7 +97,7 @@ public abstract class Tank {
     private void drawName(Graphics g){
         g.setFont(SIMALL_FONT);
         g.setColor(color);
-        g.drawString(name,x-RADIUS+5,y-RADIUS-20);
+        g.drawString(name,x-RADIUS+5,y-RADIUS-15);
     }
 
     /**
@@ -207,6 +210,7 @@ public abstract class Tank {
                 //炮弹消失
                 bullet.setVisible(false);
                 //坦克收到伤害
+                hurt(bullet);
                 //添加爆炸效果
                 Explode explode = ExplodePool.getExplode();
                 explode.setX(bulletX);
@@ -216,6 +220,24 @@ public abstract class Tank {
                 explodes.add(explode);
             }
         }
+
+    }
+    //坦克收到伤害
+    private void hurt(Bullet bullet){
+        //TODO
+        int atk = bullet.getAtk();
+        System. out. println("atk = "+atk);
+        hp -= atk;
+        if(hp < 0){
+            hp=0;
+            die();
+        }
+    }
+
+    /**
+     * 坦克死亡
+     */
+    private void die(){
 
     }
 
@@ -237,6 +259,29 @@ public abstract class Tank {
             }
         }
     }
+
+    //内部类表示血条
+    class BloodBar{
+        public static final int BAR_LENGHT = 60;
+        public static final int BAR_HEIGHT = 5;
+
+        public void draw(Graphics g){
+
+            int barX = x - RADIUS + 5;
+
+            //填充底色
+            g.setColor(Color.YELLOW);
+            g.fillRect(barX,y - RADIUS - BAR_HEIGHT*2,BAR_LENGHT,BAR_HEIGHT);
+            //血量
+            g.setColor(Color.RED);
+            g.fillRect(barX,y - RADIUS - BAR_HEIGHT*2,hp*BAR_LENGHT/DEFAULT_HP,BAR_HEIGHT);
+            //边框
+            g.setColor(Color.BLUE);
+            g.drawRect(barX,y - RADIUS - BAR_HEIGHT*2,BAR_LENGHT,BAR_HEIGHT);
+        }
+    }
+
+
 
     public int getX() {
         return x;
@@ -310,7 +355,6 @@ public abstract class Tank {
         isEnemy = enemy;
     }
 
-
     public List<Bullet> getBullets() {
         return bullets;
     }
@@ -326,4 +370,6 @@ public abstract class Tank {
     public void setName(String name) {
         this.name = name;
     }
+
+
 }
