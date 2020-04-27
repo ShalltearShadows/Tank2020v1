@@ -224,8 +224,16 @@ public class GameFrame extends Frame implements Runnable{
 
     }
 
-    private void drawEnemies(Graphics g){
-        for (Tank enemy : enemies) {
+
+    //绘制所有的敌人的坦克,如果敌人已经死亡，从容器中移除
+    private void drawEnemies (Graphics g){
+        for (int i = 0; i < enemies.size(); i++) {
+            Tank enemy = enemies.get(i);
+            if(enemy. isDie()){
+                enemies. remove(i);
+                i--;
+                continue;
+            }
             enemy.draw(g);
         }
     }
@@ -358,7 +366,7 @@ public class GameFrame extends Frame implements Runnable{
     }
 
     /**
-     * 所有的坦克.上的爆炸效果
+     * 所有的坦克上的爆炸效果
      */
     private void drawExplodes (Graphics g){
         for (Tank enemy : enemies) {

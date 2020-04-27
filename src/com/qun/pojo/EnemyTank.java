@@ -9,6 +9,7 @@ package com.qun.pojo;
 
 import com.qun.config.Constant;
 import com.qun.game.GameFrame;
+import com.qun.util.EnemyTankPool;
 import com.qun.util.ImageUtil;
 import com.qun.util.RandomUtil;
 
@@ -50,6 +51,10 @@ public class EnemyTank extends Tank {
         enemyImg[3] = ImageUtil.createImage("res/yellow/right.png");
     }
 
+    public EnemyTank() {
+        aiTime = System.currentTimeMillis();
+    }
+
 
     /**
      * 创建敌人坦克
@@ -60,11 +65,13 @@ public class EnemyTank extends Tank {
         int y = GameFrame.titleBarH + RADIUS;
         int dir = DIR_DOWN;
 
-        Tank enemy = new EnemyTank(x,y,dir);
+        Tank enemy = EnemyTankPool.getTank();
+        enemy.setX(x);
+        enemy.setY(y);
+        enemy.setDir(dir);
         enemy.setEnemy(true);
-
         enemy.setState(STATE_MOVE);
-
+        enemy.setHp(DEFAULT_HP);
         return enemy;
     }
 

@@ -77,6 +77,11 @@ public abstract class Tank {
         atk = 99;
     }
 
+    public Tank(){
+        color = RandomUtil.getRandomColor();
+        name = RandomUtil.getRandomName();
+        atk = 99;
+    }
 
 
 
@@ -230,6 +235,7 @@ public abstract class Tank {
         hp -= atk;
         if(hp < 0){
             hp=0;
+            state = STATE_DIED;
             die();
         }
     }
@@ -238,7 +244,15 @@ public abstract class Tank {
      * 坦克死亡
      */
     private void die(){
+        if (isEnemy){
+            EnemyTankPool.returnTank(this);
+        }else {
 
+        }
+    }
+
+    public boolean isDie(){
+        return state == STATE_DIED;
     }
 
     /**
