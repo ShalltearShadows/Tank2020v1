@@ -7,13 +7,23 @@
  */
 package com.qun.game;
 
-import com.qun.util.RandomUtil;
+import com.qun.util.ImageUtil;
 
 import java.awt.*;
 
 public class Explode {
 
     public static final int EXPLODE_FRAME_COUNT = 12;
+
+    //爆炸图
+    private static Image[] img;
+
+    static {
+        img = new Image[EXPLODE_FRAME_COUNT/3];
+        for (int i = 0; i < img.length; i++) {
+            img[i] = ImageUtil.createImage("res/boom/boom_"+i+".png");
+        }
+    }
 
     public static final int RADIUS = 50;
 
@@ -42,10 +52,8 @@ public class Explode {
 
     public void draw(Graphics g){
 
-        g.setColor(RandomUtil.getRandomColor());
-
         if (!visible){ return; }
-        g.fillOval(x-RADIUS/2,y-RADIUS/2,RADIUS,RADIUS);
+        g.drawImage(img[index/3],x-RADIUS/2,y-RADIUS/2,null);
         index++;
         //播放完最后一帧，设置不可见
         if (index >= EXPLODE_FRAME_COUNT){ visible=false; }
