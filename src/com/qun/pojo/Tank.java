@@ -24,7 +24,7 @@ import static com.qun.config.Constant.*;
 public abstract class Tank {
 
     //半径
-    public static final int RADIUS = 37;
+    public static final int RADIUS = 33;
 
     //默认速度 每帧跑4跑pm，4pm/30ms
     public static final int DEFAULT_SPEED = 4;
@@ -283,7 +283,7 @@ public abstract class Tank {
 
     //内部类表示血条
     class BloodBar{
-        public static final int BAR_LENGHT = 60;
+        public static final int BAR_LENGHT = 50;
         public static final int BAR_HEIGHT = 5;
 
         public void draw(Graphics g){
