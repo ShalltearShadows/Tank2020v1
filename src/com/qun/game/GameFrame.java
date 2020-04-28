@@ -224,7 +224,7 @@ public class GameFrame extends Frame implements Runnable{
         //添加按键提示信息
         g. setColor(Color.WHITE);
         g. drawString(OVER_STRO,10, FRAME_HEIGHT-40);
-        g. drawString(OVER_STR1,FRAME_WIDTH-223,FRAME_HEIGHT-30);
+        g. drawString(OVER_STR1,FRAME_WIDTH-223,FRAME_HEIGHT-40);
 
     }
 
@@ -301,6 +301,10 @@ public class GameFrame extends Frame implements Runnable{
 
     }
 
+
+
+
+
     /**
      * 开始新游戏的方法
      */
@@ -323,6 +327,10 @@ public class GameFrame extends Frame implements Runnable{
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+                    //只有在游戏运行状态，才能创建敌人
+                    if (gameState != STATE_RUN){
+                        break;
+                    }
                 }
             }
         }.start();
@@ -335,8 +343,25 @@ public class GameFrame extends Frame implements Runnable{
             System.exit(0);
         }else if(keyCode == KeyEvent.VK_ENTER){
             setGameState(STATE_MENU);
+            //重置游戏属性
+            resetGame();
         }
     }
+
+    private void resetGame(){
+        menuIndex = 0;
+        //先让自己的坦克的子弹还回对象池.
+        myTank.bulletsReturn() ;
+        //销毁自己的坦克
+        myTank = null ;
+        //清空敌人
+        for (Tank enemy : enemies) {
+            enemy.bulletsReturn();
+        }
+
+        enemies.clear();
+    }
+
 
     //游戏中按下的按键的处理
     private void KeyPressedEventRun(int keyCode) {
@@ -424,6 +449,7 @@ public class GameFrame extends Frame implements Runnable{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
         }
     }
 }

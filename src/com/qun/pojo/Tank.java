@@ -195,8 +195,16 @@ public abstract class Tank {
                 i--;
             }
         }
+    }
 
-
+    /**
+     *坦克销毁的时候处理坦克的所有的子弹
+     */
+    public void bulletsReturn(){
+        for (Bullet bullet : bullets) {
+            BulletPool.returnBullet(bullet);
+        }
+        bullets.clear();
     }
 
     /**
