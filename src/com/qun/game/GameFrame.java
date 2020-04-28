@@ -10,6 +10,7 @@ package com.qun.game;
 import com.qun.pojo.EnemyTank;
 import com.qun.pojo.MyTank;
 import com.qun.pojo.Tank;
+import com.qun.util.ImageUtil;
 
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -27,7 +28,7 @@ import static com.qun.config.Constant.*;
 
 public class GameFrame extends Frame implements Runnable{
     //游戏状态
-    public static int gameState;
+    private static int gameState;
 
     //菜单指向
     private int menuIndex;
@@ -43,6 +44,9 @@ public class GameFrame extends Frame implements Runnable{
 
     //敌人的坦克
     private List<Tank> enemies = new ArrayList<>();
+
+    //第一次使用的时候加载，而不是类加载的时候加载
+    private Image overImg = null;
 
     /**
      * 对窗口进行初始化
@@ -202,7 +206,25 @@ public class GameFrame extends Frame implements Runnable{
     }
 
 
+    /**
+     * 绘制游戏结束的画面
+     * @param g
+     */
     private void drawOver(Graphics g) {
+        //保证只加载一次
+        if (overImg == null){
+            overImg = ImageUtil.createImage("res/over.jpg");
+        }
+
+        int imgW = overImg.getWidth(null);
+        int imgH = overImg.getHeight(null);
+
+        g.drawImage(overImg,FRAME_WIDTH-imgW>>1,FRAME_HEIGHT-imgH>>1,null);
+
+        //添加按键提示信息
+        g. setColor(Color.WHITE);
+        g. drawString(OVER_STRO,10, FRAME_HEIGHT-40);
+        g. drawString(OVER_STR1,FRAME_WIDTH-223,FRAME_HEIGHT-30);
 
     }
 
@@ -246,9 +268,6 @@ public class GameFrame extends Frame implements Runnable{
 
     }
 
-
-
-
     //菜单状态按下的按键的处理
     private void KeyPressedEventMenu(int keyCode) {
         switch (keyCode){
@@ -269,10 +288,14 @@ public class GameFrame extends Frame implements Runnable{
                 break;
 
             case KeyEvent.VK_ENTER:
-                //TODO
-                //启动游戏
-                newGame();
-                break;
+                switch (menuIndex){
+                    case 0: newGame(); break;
+                    case 1: break;
+                    case 2: break;
+                    case 3: break;
+                    case 4: System.exit(0);break;
+                }
+
         }
 
 
@@ -305,8 +328,14 @@ public class GameFrame extends Frame implements Runnable{
         }.start();
     }
 
+    //gameover按键处理
     private void KeyPressedEventOver(int keyCode) {
-
+        //结束游戏
+        if(keyCode == KeyEvent.VK_ESCAPE){
+            System.exit(0);
+        }else if(keyCode == KeyEvent.VK_ENTER){
+            setGameState(STATE_MENU);
+        }
     }
 
     //游戏中按下的按键的处理
@@ -376,6 +405,14 @@ public class GameFrame extends Frame implements Runnable{
     }
 
 
+    public static int getGameState() {
+        return gameState;
+    }
+
+    public static void setGameState(int gameState) {
+        GameFrame.gameState = gameState;
+    }
+
     @Override
     public void run() {
 
@@ -389,6 +426,4 @@ public class GameFrame extends Frame implements Runnable{
             }
         }
     }
-
-
 }

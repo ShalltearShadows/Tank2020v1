@@ -229,9 +229,8 @@ public abstract class Tank {
     }
     //坦克收到伤害
     private void hurt(Bullet bullet){
-        //TODO
         int atk = bullet.getAtk();
-        System. out. println("atk = "+atk);
+
         hp -= atk;
         if(hp < 0){
             hp=0;
@@ -247,7 +246,7 @@ public abstract class Tank {
         if (isEnemy){
             EnemyTankPool.returnTank(this);
         }else {
-
+            GameFrame.setGameState(STATE_OVER);
         }
     }
 

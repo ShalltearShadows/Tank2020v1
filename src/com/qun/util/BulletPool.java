@@ -46,8 +46,6 @@ public class BulletPool {
            bullet = pool.remove(0);
         }
 
-        System.out.println("从对象池获取一个炮弹，其剩余数量为"+pool.size());
-
         return bullet;
     }
 
@@ -62,6 +60,5 @@ public class BulletPool {
         }
         pool.add(bullet);
 
-        System.out.println("归还一个炮弹给对象池，其数量为"+pool.size());
     }
 }
