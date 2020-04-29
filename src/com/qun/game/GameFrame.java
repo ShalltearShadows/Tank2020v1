@@ -241,18 +241,21 @@ public class GameFrame extends Frame implements Runnable{
         //绘制地图
         gameMap.draw(g);
 
+        //坦克与炮弹碰撞的判断
+        bulletCollideTank();
+
+        //炮弹和砖块的碰撞
+        bulletCollideMapTile();
+
         drawEnemies(g);
 
         myTank.draw(g);
 
-        //坦克与炮弹碰撞的判断
-        bulletCollideTank();
-
         //爆炸效果
         drawExplodes(g);
 
-    }
 
+    }
 
     //绘制所有的敌人的坦克,如果敌人已经死亡，从容器中移除
     private void drawEnemies (Graphics g){
@@ -302,15 +305,8 @@ public class GameFrame extends Frame implements Runnable{
                     case 3: break;
                     case 4: System.exit(0);break;
                 }
-
         }
-
-
     }
-
-
-
-
 
     /**
      * 开始新游戏的方法
@@ -429,6 +425,22 @@ public class GameFrame extends Frame implements Runnable{
             myTank.collideBullets(enemy.getBullets());
         }
     }
+
+    //所有的子弹和地图块的碰撞
+    private void bulletCollideMapTile(){
+        //自己的坦克的子弹和地图块的碰撞
+        myTank.bulletsCollideMapTiles(gameMap.getTiles());
+        //敌人的坦克的子弹和地图块的碰撞
+        for (Tank enemy : enemies) {
+            enemy.bulletsCollideMapTiles(gameMap.getTiles());
+        }
+
+        //清理所有不可见的砖块
+        gameMap.clearDestoryTile();
+
+    }
+
+
 
     /**
      * 所有的坦克上的爆炸效果

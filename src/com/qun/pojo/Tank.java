@@ -10,13 +10,15 @@ package com.qun.pojo;
 import com.qun.config.Constant;
 import com.qun.game.Explode;
 import com.qun.game.GameFrame;
+import com.qun.map.MapTile;
 import com.qun.util.*;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.qun.config.Constant.*;
+import static com.qun.config.Constant.SIMALL_FONT;
+import static com.qun.config.Constant.STATE_OVER;
 
 /**
  * 坦克类
@@ -225,16 +227,21 @@ public abstract class Tank {
                 //坦克收到伤害
                 hurt(bullet);
                 //添加爆炸效果
-                Explode explode = ExplodePool.getExplode();
-                explode.setX(bulletX);
-                explode.setY(bulletY);
-                explode.setVisible(true);
-                explode.setIndex(0);
-                explodes.add(explode);
+                addExplode(bulletX,bulletY-10);
             }
         }
 
     }
+
+    private void addExplode(int bulletX,int bulletY) {
+        Explode explode = ExplodePool.getExplode();
+        explode.setX(bulletX);
+        explode.setY(bulletY);
+        explode.setVisible(true);
+        explode.setIndex(0);
+        explodes.add(explode);
+    }
+
     //坦克收到伤害
     private void hurt(Bullet bullet){
         int atk = bullet.getAtk();
@@ -302,6 +309,19 @@ public abstract class Tank {
         }
     }
 
+    //坦克的子弹和地图所有的块的碰撞
+    public void bulletsCollideMapTiles(List<MapTile> tiles) {
+        for (MapTile tile : tiles) {
+            if (tile.isCollideBullet(bullets)) {
+                //添加爆炸效果
+                addExplode(tile.getX()+MapTile.tileW/2,tile.getY()+MapTile.tileW/2);
+                //销毁砖块
+                tile.setVisible(false);
+                //归还对象池
+                MapTilePool.returnMapTile(tile);
+            }
+        }
+    }
 
 
     public int getX() {
