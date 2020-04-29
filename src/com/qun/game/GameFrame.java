@@ -7,6 +7,7 @@
  */
 package com.qun.game;
 
+import com.qun.map.GameMap;
 import com.qun.pojo.EnemyTank;
 import com.qun.pojo.MyTank;
 import com.qun.pojo.Tank;
@@ -47,6 +48,9 @@ public class GameFrame extends Frame implements Runnable{
 
     //第一次使用的时候加载，而不是类加载的时候加载
     private Image overImg = null;
+
+    //地图容器
+    private GameMap gameMap;
 
     /**
      * 对窗口进行初始化
@@ -234,6 +238,9 @@ public class GameFrame extends Frame implements Runnable{
         g.setColor(Color.BLACK);
         g.fillRect( 0, 0, FRAME_WIDTH, FRAME_HEIGHT) ;
 
+        //绘制地图
+        gameMap.draw(g);
+
         drawEnemies(g);
 
         myTank.draw(g);
@@ -311,7 +318,9 @@ public class GameFrame extends Frame implements Runnable{
     private void newGame() {
         gameState = STATE_RUN;
         //创建坦克对象，敌人的坦克对象
-        myTank = new MyTank(400,200, Tank.DIR_DOWN);
+        myTank = new MyTank(FRAME_WIDTH/3,FRAME_HEIGHT-Tank.RADIUS*2,Tank.DIR_UP);
+
+        gameMap = new GameMap();
 
         //使用单独一个线程用于控制产生敌人的坦克
         new Thread(){
@@ -360,6 +369,8 @@ public class GameFrame extends Frame implements Runnable{
         }
 
         enemies.clear();
+        //清空地图资源
+        gameMap = null;
     }
 
 
