@@ -7,6 +7,7 @@
  */
 package com.qun.map;
 
+import com.qun.config.Constant;
 import com.qun.pojo.Bullet;
 import com.qun.util.BulletPool;
 import com.qun.util.Collide;
@@ -54,7 +55,7 @@ public class MapTile {
         //绘制块,上的名字
         if(name != null){
             g.setColor(Color.GREEN);
-            g.drawString(name,x+radius/2-3,y+radius*3/2-3);
+            g.drawString(name,x+radius/2-3,y+radius*3/2);
         }
     }
 
@@ -83,6 +84,11 @@ public class MapTile {
             }
         }
         return false;
+    }
+
+    //判断当前的地图块是否是老巢
+    public boolean isHouse( ){
+        return Constant.HOUSE_STR.equals(name);
     }
 
     public int getX() {

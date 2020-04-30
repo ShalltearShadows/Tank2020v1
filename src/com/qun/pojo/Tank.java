@@ -231,6 +231,7 @@ public abstract class Tank {
                 hurt(bullet);
                 //添加爆炸效果
                 addExplode(bulletX,bulletY-10);
+
             }
         }
 
@@ -324,6 +325,20 @@ public abstract class Tank {
                 tile.setVisible(false);
                 //归还对象池
                 MapTilePool.returnMapTile(tile);
+                //当老巢被击毁之后，一秒钟后切换到游戏结束的画面
+                if (tile.isHouse()){
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            GameFrame.setGameState(STATE_OVER);
+                        }
+                    }.start();
+                }
             }
         }
     }
