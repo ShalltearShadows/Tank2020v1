@@ -435,6 +435,11 @@ public class GameFrame extends Frame implements Runnable{
             enemy.bulletsCollideMapTiles(gameMap.getTiles());
         }
 
+        //坦克和地图的碰撞
+        if (myTank.isCollideTile(gameMap.getTiles())){
+            myTank.back();
+        }
+
         //清理所有不可见的砖块
         gameMap.clearDestoryTile();
 

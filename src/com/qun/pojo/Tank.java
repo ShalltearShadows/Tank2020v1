@@ -288,6 +288,8 @@ public abstract class Tank {
         }
     }
 
+
+
     //内部类表示血条
     class BloodBar{
         public static final int BAR_LENGHT = 50;
@@ -320,6 +322,83 @@ public abstract class Tank {
                 //归还对象池
                 MapTilePool.returnMapTile(tile);
             }
+        }
+    }
+    /**
+     * 一个地图块和当前的坦克碰撞的方法
+     * 从tile 中提取8个点来判断8个点是否有任何一个点和当前的坦克有了碰撞
+     * 点的顺序从左上角的点开始，顺时针遍历
+     */
+    public boolean isCollideTile(List<MapTile> tiles){
+
+        for (MapTile tile : tiles) {
+            //点-1
+            int tileX = tile.getX();
+            int tileY = tile.getY();
+            boolean collide = Collide.isCollide(x, y, RADIUS, tileX, tileY);
+            //如果碰上了就直接返回，否则继续判断下一个点
+            if(collide){
+                return true;
+            }
+
+            //点-2
+            tileX += MapTile.radius;
+            collide = Collide.isCollide(x, y, RADIUS, tileX, tileY);
+            if(collide){
+                return true;
+            }
+
+            //点-3
+            tileX += MapTile.radius;
+            collide = Collide.isCollide(x, y, RADIUS, tileX, tileY);
+            if(collide){
+                return true;
+            }
+            //点-4
+            tileY += MapTile.radius;
+            collide = Collide.isCollide(x, y, RADIUS, tileX, tileY);
+            if(collide){
+                return true;
+            }
+            //点-5
+            tileY += MapTile.radius;
+            collide = Collide.isCollide(x, y, RADIUS, tileX, tileY);
+            if(collide){
+                return true;
+            }
+            //点-6
+            tileX -= MapTile.radius;
+            collide = Collide.isCollide(x, y, RADIUS, tileX, tileY);
+            if(collide){
+                return true;
+            }
+            //点-7
+            tileX -= MapTile.radius;
+            collide = Collide.isCollide(x, y, RADIUS, tileX, tileY);
+            if(collide){
+                return true;
+            }
+            //点-8
+            tileY -= MapTile.radius;
+            collide = Collide.isCollide(x, y, RADIUS, tileX, tileY);
+            if(collide){
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
+    public void back() {
+
+        int sp = speed;
+
+        switch (dir){
+            case DIR_UP: y += sp; break;
+            case DIR_DOWN: y -= sp; break;
+            case DIR_LEFT: x += sp; break;
+            case DIR_RIGHT: x -= sp; break;
         }
     }
 
