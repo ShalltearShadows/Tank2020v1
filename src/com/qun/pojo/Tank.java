@@ -161,12 +161,23 @@ public abstract class Tank {
         }
     }
 
+
+
+
     /**
      * 坦克开火的方法
      * 创建一个炮弹对象，其属性通过坦克获得
      * 然后将创建的炮弹添加到管理炮弹的容器中
      */
+    //上次开火时间
+    private long fireTime ;
+    public static final int FIRE_INTERVAL = 150;
+
     public void fire(){
+        if (System.currentTimeMillis()-fireTime<FIRE_INTERVAL){
+            return;
+        }
+
         int bulletX = x;
         int bulletY = y;
 
@@ -182,6 +193,8 @@ public abstract class Tank {
         bullet.initBulletByPool(bulletX, bulletY, dir, atk, color, true);
 
         bullets.add(bullet);
+
+        fireTime = System.currentTimeMillis();
     }
 
     /**
@@ -265,7 +278,7 @@ public abstract class Tank {
         if (isEnemy){
             EnemyTankPool.returnTank(this);
         }else {
-            GameFrame.setGameState(STATE_OVER);
+            delaySecondToOver(1000);
         }
     }
 
@@ -327,21 +340,32 @@ public abstract class Tank {
                 MapTilePool.returnMapTile(tile);
                 //当老巢被击毁之后，一秒钟后切换到游戏结束的画面
                 if (tile.isHouse()){
-                    new Thread(){
-                        @Override
-                        public void run() {
-                            try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            GameFrame.setGameState(STATE_OVER);
-                        }
-                    }.start();
+                    delaySecondToOver(1000);
                 }
             }
         }
     }
+
+    /**
+     * 延迟若干毫秒出现游戏结束画面
+     * @param millisSecond
+     */
+    private void delaySecondToOver(int millisSecond){
+        new Thread(){
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                GameFrame.setGameState(STATE_OVER);
+            }
+        }.start();
+    }
+
+
+
     /**
      * 一个地图块和当前的坦克碰撞的方法
      * 从tile 中提取8个点来判断8个点是否有任何一个点和当前的坦克有了碰撞
