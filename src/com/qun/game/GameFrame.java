@@ -426,7 +426,7 @@ public class GameFrame extends Frame implements Runnable{
         }
     }
 
-    //所有的子弹和地图块的碰撞
+    //地图块的碰撞
     private void bulletCollideMapTile(){
         //自己的坦克的子弹和地图块的碰撞
         myTank.bulletsCollideMapTiles(gameMap.getTiles());
@@ -438,6 +438,13 @@ public class GameFrame extends Frame implements Runnable{
         //坦克和地图的碰撞
         if (myTank.isCollideTile(gameMap.getTiles())){
             myTank.back();
+        }
+
+        //敌人和砖块的碰撞
+        for (Tank enemy : enemies) {
+            if (enemy.isCollideTile(gameMap.getTiles())){
+                enemy.back();
+            }
         }
 
         //清理所有不可见的砖块
