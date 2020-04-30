@@ -30,6 +30,9 @@ public class GameMap {
     //地图元素块的容器
     private List<MapTile> tiles = new ArrayList<>();
 
+    //大本营
+    private TankHouse house;
+
     public GameMap() {
         initMap();
     }
@@ -56,6 +59,9 @@ public class GameMap {
             tile.setY(y);
             tiles.add(tile);
         }
+
+        //初始化大本营
+        house = new TankHouse();
     }
 
     /**
@@ -80,6 +86,7 @@ public class GameMap {
         for (MapTile tile : tiles) {
             tile.draw(g);
         }
+        house.draw(g);
     }
 
     /**

@@ -26,7 +26,7 @@ import static com.qun.config.Constant.STATE_OVER;
 public abstract class Tank {
 
     //半径
-    public static final int RADIUS = 33;
+    public static final int RADIUS = 30;
 
     //默认速度 每帧跑4跑pm，4pm/30ms
     public static final int DEFAULT_SPEED = 4;
@@ -48,6 +48,7 @@ public abstract class Tank {
 
     private String name;
     private int x , y;//中心位置
+    private int oldX,oldY;
     private int hp = DEFAULT_HP;
     private int atk;
     private int speed = DEFAULT_SPEED;
@@ -150,6 +151,8 @@ public abstract class Tank {
 
     //坦克的移动
     private void move(){
+        oldX = x;
+        oldY = y;
         switch (dir){
             case DIR_UP: y -= speed; if (y < RADIUS + GameFrame.titleBarH){y = RADIUS + GameFrame.titleBarH;} break;
             case DIR_DOWN: y += speed; if (y > Constant.FRAME_HEIGHT-RADIUS){y = Constant.FRAME_HEIGHT-RADIUS;} break;
@@ -391,15 +394,8 @@ public abstract class Tank {
     }
 
     public void back() {
-
-        int sp = speed;
-
-        switch (dir){
-            case DIR_UP: y += sp; break;
-            case DIR_DOWN: y -= sp; break;
-            case DIR_LEFT: x += sp; break;
-            case DIR_RIGHT: x -= sp; break;
-        }
+        x = oldX;
+        y = oldY;
     }
 
 

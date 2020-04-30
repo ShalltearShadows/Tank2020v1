@@ -28,6 +28,8 @@ public class MapTile {
 
     private boolean visible = true;
 
+    private String name;
+
     static {
         tileImg = ImageUtil.createImage("res/wall.png");
     }
@@ -48,6 +50,12 @@ public class MapTile {
             return ;
         }
         g.drawImage(tileImg,x,y,null);
+
+        //绘制块,上的名字
+        if(name != null){
+            g.setColor(Color.GREEN);
+            g.drawString(name,x+radius/2-3,y+radius*3/2-3);
+        }
     }
 
 
@@ -99,5 +107,13 @@ public class MapTile {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
