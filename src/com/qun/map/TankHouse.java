@@ -37,4 +37,12 @@ public class TankHouse {
             tile.draw(g);
         }
     }
+
+    public List<MapTile> getTiles() {
+        return tiles;
+    }
+
+    public void setTiles(List<MapTile> tiles) {
+        this.tiles = tiles;
+    }
 }

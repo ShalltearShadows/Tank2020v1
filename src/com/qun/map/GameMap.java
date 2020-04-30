@@ -62,6 +62,7 @@ public class GameMap {
 
         //初始化大本营
         house = new TankHouse();
+        tiles.addAll(house.getTiles());
     }
 
     /**
@@ -86,7 +87,6 @@ public class GameMap {
         for (MapTile tile : tiles) {
             tile.draw(g);
         }
-        house.draw(g);
     }
 
     /**
