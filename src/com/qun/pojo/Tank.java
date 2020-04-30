@@ -278,7 +278,7 @@ public abstract class Tank {
         if (isEnemy){
             EnemyTankPool.returnTank(this);
         }else {
-            delaySecondToOver(1000);
+            delaySecondToOver(0);
         }
     }
 

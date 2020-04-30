@@ -72,16 +72,14 @@ public class Constant {
     public static final int ENEMY_MAX_COUNT = 10;
 
     //敌人的出生间隔
-    public static final int ENEMY_BORN_INTERVAL = 5000;
+    public static final int ENEMY_BORN_INTERVAL = 3000;
 
     //敌人状态的切换间隔
     public static final int ENEMY_AI_INTERVAL = 3000;
 
     //敌人每一帧开火的概率
-    public static final double ENEMY_FIRE_PERCENT = 0.03;
+    public static final double ENEMY_FIRE_PERCENT = 0.04;
 
 
 
-
-    public static final String HOUSE_STR = "家";
 }

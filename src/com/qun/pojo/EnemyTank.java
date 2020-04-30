@@ -22,10 +22,35 @@ import java.awt.*;
 public class EnemyTank extends Tank {
 
     //敌军坦克
-    public static Image[] enemyImg;
+    public static Image[][] enemyImg;
 
     //记录敌人的秒龄
     private long aiTime;
+
+    public static final int TYPE_CYAN = 0;
+    public static final int TYPE_YELLOW = 1;
+
+    private int tpye = TYPE_CYAN;
+
+    private String[] color = {"cyan","yellow"};
+
+    //在静态块初始化
+    {
+        enemyImg = new Image[2][4];
+
+        for (int i = 0; i < enemyImg.length; i++) {
+            enemyImg[i][0] = ImageUtil.createImage("res/"+color[i]+"/up.png");
+            enemyImg[i][1] = ImageUtil.createImage("res/"+color[i]+"/down.png");
+            enemyImg[i][2] = ImageUtil.createImage("res/"+color[i]+"/left.png");
+            enemyImg[i][3] = ImageUtil.createImage("res/"+color[i]+"/right.png");
+        }
+    }
+
+    public EnemyTank() {
+        aiTime = System.currentTimeMillis();
+        tpye = RandomUtil.getRandomNumber(0,2);
+    }
+
 
 
     /**
@@ -40,21 +65,6 @@ public class EnemyTank extends Tank {
         //敌人一创建就计时
         aiTime = System.currentTimeMillis();
     }
-
-
-    //在静态块初始化
-    {
-        enemyImg = new Image[4];
-        enemyImg[0] = ImageUtil.createImage("res/yellow/up.png");
-        enemyImg[1] = ImageUtil.createImage("res/yellow/down.png");
-        enemyImg[2] = ImageUtil.createImage("res/yellow/left.png");
-        enemyImg[3] = ImageUtil.createImage("res/yellow/right.png");
-    }
-
-    public EnemyTank() {
-        aiTime = System.currentTimeMillis();
-    }
-
 
     /**
      * 创建敌人坦克
@@ -79,7 +89,7 @@ public class EnemyTank extends Tank {
     @Override
     public void drawImgTank(Graphics g){
         ai();
-        g.drawImage(enemyImg[getDir()],getX()-RADIUS,getY()-RADIUS,null);
+        g.drawImage(enemyImg[tpye][getDir()],getX()-RADIUS,getY()-RADIUS,null);
     }
 
 

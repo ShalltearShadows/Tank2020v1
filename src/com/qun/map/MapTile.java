@@ -7,7 +7,6 @@
  */
 package com.qun.map;
 
-import com.qun.config.Constant;
 import com.qun.pojo.Bullet;
 import com.qun.util.BulletPool;
 import com.qun.util.Collide;
@@ -21,7 +20,10 @@ import java.util.List;
  */
 public class MapTile {
 
-    private static Image tileImg;
+    public static final int TYPE_NORMAL = 0;
+    public static final int TYPE_HOUSE = 1;
+
+    private static Image[] tileImg;
 
     public static int tileW = 40;
 
@@ -29,10 +31,12 @@ public class MapTile {
 
     private boolean visible = true;
 
-    private String name;
+    private int type = TYPE_NORMAL;
 
     static {
-        tileImg = ImageUtil.createImage("res/wall.png");
+        tileImg = new Image[2];
+        tileImg[TYPE_NORMAL] = ImageUtil.createImage("res/wall.png");
+        tileImg[TYPE_HOUSE] = ImageUtil.createImage("res/house.png");
     }
 
     //图片资源的左上角
@@ -50,13 +54,8 @@ public class MapTile {
         if (!visible){
             return ;
         }
-        g.drawImage(tileImg,x,y,null);
+        g.drawImage(tileImg[type],x,y,null);
 
-        //绘制块,上的名字
-        if(name != null){
-            g.setColor(Color.GREEN);
-            g.drawString(name,x+radius/2-3,y+radius*3/2);
-        }
     }
 
 
@@ -88,7 +87,7 @@ public class MapTile {
 
     //判断当前的地图块是否是老巢
     public boolean isHouse( ){
-        return Constant.HOUSE_STR.equals(name);
+        return type == TYPE_HOUSE;
     }
 
     public int getX() {
@@ -115,11 +114,11 @@ public class MapTile {
         this.visible = visible;
     }
 
-    public String getName() {
-        return name;
+    public int getType() {
+        return type;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setType(int type) {
+        this.type = type;
     }
 }

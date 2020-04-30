@@ -27,9 +27,9 @@ public class TankHouse {
         tiles.add(new MapTile(HOUSE_X+MapTile.tileW*2,HOUSE_Y));
         tiles.add(new MapTile(HOUSE_X+MapTile.tileW*2,HOUSE_Y+MapTile.tileW));
 
-        //有文字的块
+        //设置老巢地图块
         tiles.add(new MapTile(HOUSE_X+MapTile.tileW,HOUSE_Y+MapTile.tileW));
-        tiles.get(tiles.size()-1).setName(Constant.HOUSE_STR);
+        tiles.get(tiles.size()-1).setType(MapTile.TYPE_HOUSE);
     }
 
     public void draw(Graphics g){

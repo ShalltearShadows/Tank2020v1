@@ -34,13 +34,20 @@ public class GameMap {
     private TankHouse house;
 
     public GameMap() {
-        initMap();
+        firstMap();
     }
+
+    private void initHouse(){
+        //初始化大本营
+        house = new TankHouse();
+        tiles.addAll(house.getTiles());
+    }
+
 
     /**
      * 初始化地图砖块
      */
-    private void initMap(){
+    private void randomMap(){
         //得到CONUT个随机位置的砖块，添加到容器中
         final int COUNT = 20;
 
@@ -59,11 +66,38 @@ public class GameMap {
             tile.setY(y);
             tiles.add(tile);
         }
-
-        //初始化大本营
-        house = new TankHouse();
-        tiles.addAll(house.getTiles());
+        initHouse();
     }
+
+
+    /**
+     * 往地图块容器中添加一行指定类型的地图块
+     * @param startX 派加地图块的起始的x坐标
+     * @param startY 派加地图块的超始的Y坐标
+     * @param endX 派加地图块的结束的x坐标
+     * @param type 地图块的类型
+     * @param DIS 地图块的间隔
+     */
+    public void addRow(int startX, int startY, int endX, int type, final int DIS){
+        int count = (endX - startX )/(MapTile.tileW+DIS);
+        for(int i=0;i<count;i++){
+            MapTile tile = MapTilePool.getMapTile();
+            tile.setType(type);
+            tile.setX(startX + i * (MapTile.tileW+DIS));
+            tile.setY(startY);
+            tiles.add(tile);
+        }
+        initHouse();
+    }
+
+    public void firstMap(){
+        addRow(MAP_X,MAP_Y,MAP_X+MAP_WIDTH,MapTile.TYPE_NORMAL,0);
+        addRow(MAP_X,MAP_Y+MapTile.tileW*2,MAP_X+MAP_WIDTH,MapTile.TYPE_NORMAL,0);
+        addRow(MAP_X,MAP_Y+MapTile.tileW*4,MAP_X+MAP_WIDTH,MapTile.TYPE_NORMAL,MapTile.tileW);
+        addRow(MAP_X,MAP_Y+MapTile.tileW*6,MAP_X+MAP_WIDTH,MapTile.TYPE_NORMAL,MapTile.tileW*2);
+        addRow(MAP_X,MAP_Y+MapTile.tileW*8,MAP_X+MAP_WIDTH,MapTile.TYPE_NORMAL,MapTile.tileW*3);
+    }
+
 
     /**
      * 某一个点确定的地图块。是否和tiles 集合中的所有的块有重叠的部分

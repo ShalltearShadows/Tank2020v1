@@ -53,9 +53,7 @@ public class ImageUtil {
     }
 
     public static void main(String[] args) {
-        changeSize(60,60,"res/brown/up.png");
-        changeSize(60,60,"res/brown/down.png");
-        changeSize(60,60,"res/brown/left.png");
-        changeSize(60,60,"res/brown/right.png");
+        changeSize(40,40,"res/house.png");
+
     }
 }
