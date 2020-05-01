@@ -40,7 +40,7 @@ public class Constant {
 
     public static final int STATE_MENU = 0;
     public static final int STATE_HELP = 1;
-    public static final int STATE_ABOUT = 2;
+    public static final int STATE_WIN = 2;
     public static final int STATE_RUN = 3;
     public static final int STATE_OVER = 4;
 
@@ -58,6 +58,7 @@ public class Constant {
     //字体
     public static final Font FONT = new Font("宋体",Font.BOLD,24);
     public static final Font SIMALL_FONT = new Font("宋体",Font.PLAIN,12);
+    public static final Font MIDDLE_FONT = new Font("宋体",Font.PLAIN,18);
 
     //FPS
     public static final int REPAINT_INTERVAL = 37;

@@ -17,9 +17,9 @@ public class MapTilePool {
     private static List<MapTile> pool = new ArrayList<>();
 
     //默认对象池的大小
-    public static final int DEFAULT_POOL_SIZE = 50;
+    public static final int DEFAULT_POOL_SIZE = 150;
     //最大长度20
-    public static final int MAX_POOL_SIZE = 70;
+    public static final int MAX_POOL_SIZE = 200;
 
     //在类加载的时候创建20对象
     static {
@@ -42,6 +42,7 @@ public class MapTilePool {
             mapTile = pool.remove(0);
         }
 
+        mapTile.setVisible(true);
 
         return mapTile;
     }

@@ -34,7 +34,8 @@ public class GameMap {
     private TankHouse house;
 
     public GameMap() {
-        firstMap();
+        secondMap();
+        initHouse();
     }
 
     private void initHouse(){
@@ -66,7 +67,7 @@ public class GameMap {
             tile.setY(y);
             tiles.add(tile);
         }
-        initHouse();
+
     }
 
 
@@ -79,6 +80,7 @@ public class GameMap {
      * @param DIS 地图块的间隔
      */
     public void addRow(int startX, int startY, int endX, int type, final int DIS){
+        startY += 13;
         int count = (endX - startX )/(MapTile.tileW+DIS);
         for(int i=0;i<count;i++){
             MapTile tile = MapTilePool.getMapTile();
@@ -87,7 +89,6 @@ public class GameMap {
             tile.setY(startY);
             tiles.add(tile);
         }
-        initHouse();
     }
 
     public void firstMap(){
@@ -96,6 +97,28 @@ public class GameMap {
         addRow(MAP_X,MAP_Y+MapTile.tileW*4,MAP_X+MAP_WIDTH,MapTile.TYPE_NORMAL,MapTile.tileW);
         addRow(MAP_X,MAP_Y+MapTile.tileW*6,MAP_X+MAP_WIDTH,MapTile.TYPE_NORMAL,MapTile.tileW*2);
         addRow(MAP_X,MAP_Y+MapTile.tileW*8,MAP_X+MAP_WIDTH,MapTile.TYPE_NORMAL,MapTile.tileW*3);
+    }
+
+    public void secondMap(){
+        addRow(MAP_X,MAP_Y,MAP_X+MAP_WIDTH,MapTile.TYPE_NORMAL,0);
+        addRow(MAP_X,MAP_Y+MapTile.tileW,MAP_X+MAP_WIDTH,MapTile.TYPE_NORMAL,0);
+        addRow(MAP_X,MAP_Y+MapTile.tileW*2,MAP_X+MAP_WIDTH,MapTile.TYPE_NORMAL,0);
+        addRow(MAP_X,MAP_Y+MapTile.tileW*7,MAP_X+MAP_WIDTH,MapTile.TYPE_NORMAL,0);
+        addRow(MAP_X,MAP_Y+MapTile.tileW*8,MAP_X+MAP_WIDTH,MapTile.TYPE_NORMAL,0);
+        addRow(MAP_X,MAP_Y+MapTile.tileW*9,MAP_X+MAP_WIDTH,MapTile.TYPE_NORMAL,0);
+
+
+        addRow(MAP_X,MAP_Y+MapTile.tileW*10,MAP_X+MapTile.tileW*4,MapTile.TYPE_NORMAL,0);
+        addRow(MAP_X,MAP_Y+MapTile.tileW*11,MAP_X+MapTile.tileW*4,MapTile.TYPE_NORMAL,0);
+        addRow(MAP_X,MAP_Y+MapTile.tileW*12,MAP_X+MapTile.tileW*4,MapTile.TYPE_NORMAL,0);
+        addRow(MAP_X,MAP_Y+MapTile.tileW*13,MAP_X+MapTile.tileW*4,MapTile.TYPE_NORMAL,0);
+        addRow(MAP_X,MAP_Y+MapTile.tileW*14,MAP_X+MapTile.tileW*4,MapTile.TYPE_NORMAL,0);
+
+        addRow(MAP_X+MapTile.tileW*14,MAP_Y+MapTile.tileW*10,MAP_X+MapTile.tileW*18,MapTile.TYPE_NORMAL,0);
+        addRow(MAP_X+MapTile.tileW*14,MAP_Y+MapTile.tileW*11,MAP_X+MapTile.tileW*18,MapTile.TYPE_NORMAL,0);
+        addRow(MAP_X+MapTile.tileW*14,MAP_Y+MapTile.tileW*12,MAP_X+MapTile.tileW*18,MapTile.TYPE_NORMAL,0);
+        addRow(MAP_X+MapTile.tileW*14,MAP_Y+MapTile.tileW*13,MAP_X+MapTile.tileW*18,MapTile.TYPE_NORMAL,0);
+        addRow(MAP_X+MapTile.tileW*14,MAP_Y+MapTile.tileW*14,MAP_X+MapTile.tileW*18,MapTile.TYPE_NORMAL,0);
     }
 
 
@@ -132,6 +155,10 @@ public class GameMap {
             if (!tile.isVisible())
                 tiles.remove(i);
         }
+    }
+
+    public void clear(){
+        tiles.clear();
     }
 
     public List<MapTile> getTiles() {
