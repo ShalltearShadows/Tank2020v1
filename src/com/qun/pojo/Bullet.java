@@ -9,6 +9,8 @@ package com.qun.pojo;
 
 
 import com.qun.config.Constant;
+import com.qun.util.ImageUtil;
+import com.qun.util.RandomUtil;
 
 import java.awt.*;
 
@@ -16,30 +18,32 @@ import java.awt.*;
  * 炮弹类
  */
 public class Bullet {
-    //炮弹的速度默认为坦克移速的4倍
-    public static final int DEFAULT_SPEED = Tank.DEFAULT_SPEED << 2;
 
     //炮弹的大小
-    public static final int RADIUS = 4;
+    public static final int RADIUS = 5;
 
     private int x,y;
-    private int speed = DEFAULT_SPEED;
+    private int speed = 12;
     private int dir;
     private int atk;
-    private Color color;
+
+    private int color=0;
+
+    private static Image[] bulletImg;
+
+    static {
+        bulletImg = new Image[4];
+        for (int i = 1; i <= bulletImg.length; i++) {
+            bulletImg[i-1]= ImageUtil.createImage("res/bullet/"+i+".png");
+        }
+    }
 
     //炮弹是否可见
     private boolean visible = true;
 
     //给对象池用的
-    public Bullet(){}
-
-    public Bullet(int x, int y, int dir, int atk, Color color) {
-        this.x = x;
-        this.y = y;
-        this.dir = dir;
-        this.atk = atk;
-        this.color = color;
+    public Bullet(){
+        color = RandomUtil.getRandomNumber(0,4);
     }
 
     /**
@@ -49,8 +53,7 @@ public class Bullet {
     public void draw(Graphics g){
         if (!visible)return;
         logic();
-        g.setColor(color);
-        g.fillOval(x-RADIUS,y-RADIUS,RADIUS<<1,RADIUS<<1);
+        g.drawImage(bulletImg[color],x-RADIUS,y-RADIUS,null);
     }
 
     /**
@@ -67,58 +70,32 @@ public class Bullet {
             case Tank.DIR_LEFT: x -= speed; if (x<0) visible=false; break;
             case Tank.DIR_RIGHT: x += speed; if (x>Constant.FRAME_WIDTH) visible=false; break;
         }
+
+
     }
 
     /**
      * 对象池初始化
      * @return
      */
-    public void initBulletByPool(int x, int y, int dir, int atk, Color color, Boolean visible) {
+    public void initBulletByPool(int x, int y, int dir, int atk, Boolean visible) {
         this.x = x;
         this.y = y;
         this.dir = dir;
         this.atk = atk;
-        this.color = color;
         this.visible = visible;
-    }
-    public int getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(int speed) {
-        this.speed = speed;
     }
 
     public int getX() {
         return x;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
     public int getY() {
         return y;
     }
 
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public int getDir() {
-        return dir;
-    }
-
-    public void setDir(int dir) {
-        this.dir = dir;
-    }
-
     public int getAtk() {
         return atk;
-    }
-
-    public void setAtk(int atk) {
-        this.atk = atk;
     }
 
     public boolean isVisible() {

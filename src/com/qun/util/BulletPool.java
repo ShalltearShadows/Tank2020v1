@@ -21,9 +21,9 @@ public class BulletPool {
     private static List<Bullet> pool = new ArrayList<>();
 
     //默认对象池的大小
-    public static final int DEFAULT_POOL_SIZE = 200;
+    public static final int DEFAULT_POOL_SIZE = 50;
     //最大长度300
-    public static final int MAX_POOL_SIZE = 300;
+    public static final int MAX_POOL_SIZE = 100;
 
     //在类加载的时候创建200个子弹对象
     static {

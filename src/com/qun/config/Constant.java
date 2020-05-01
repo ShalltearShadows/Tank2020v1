@@ -16,7 +16,6 @@ import java.awt.*;
 public class Constant {
 
 
-
     /****************************游戏窗口相关******************************/
     //标题
     public static final String GAME_TITLE = "坦克大战";
@@ -61,7 +60,7 @@ public class Constant {
     public static final Font MIDDLE_FONT = new Font("宋体",Font.PLAIN,18);
 
     //FPS
-    public static final int REPAINT_INTERVAL = 37;
+    public static final int REPAINT_INTERVAL = 30;
 
 
 

@@ -190,7 +190,7 @@ public abstract class Tank {
 
         Bullet bullet = BulletPool.getBullet();
 
-        bullet.initBulletByPool(bulletX, bulletY, dir, atk, color, true);
+        bullet.initBulletByPool(bulletX, bulletY, dir, atk,true);
 
         bullets.add(bullet);
 

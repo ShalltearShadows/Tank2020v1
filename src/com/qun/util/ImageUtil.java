@@ -53,7 +53,10 @@ public class ImageUtil {
     }
 
     public static void main(String[] args) {
-        changeSize(40,40,"res/house.png");
+        changeSize(10,10,"res/bullet/1.png");
+        changeSize(10,10,"res/bullet/2.png");
+        changeSize(10,10,"res/bullet/3.png");
+        changeSize(10,10,"res/bullet/4.png");
 
     }
 }
