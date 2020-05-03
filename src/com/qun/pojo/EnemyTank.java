@@ -14,7 +14,7 @@ import com.qun.util.ImageUtil;
 import com.qun.util.RandomUtil;
 
 import java.awt.*;
-
+import static com.qun.config.Constant.*;
 
 /**
  * 敌军坦克
@@ -52,7 +52,6 @@ public class EnemyTank extends Tank {
     }
 
 
-
     /**
      * 创建的敌军的坦克
      *
@@ -85,10 +84,17 @@ public class EnemyTank extends Tank {
         return enemy;
     }
 
+    @Override
+    protected void drawName(Graphics g) {
+        g.setFont(SIMALL_FONT);
+        g.setColor(Color.RED);
+        g.drawString(name,x-RADIUS+5,y-RADIUS-15);
+    }
+
 
     @Override
     public void drawImgTank(Graphics g){
-        ai();
+        move();
         g.drawImage(enemyImg[tpye][getDir()],getX()-RADIUS,getY()-RADIUS,null);
     }
 
@@ -96,7 +102,8 @@ public class EnemyTank extends Tank {
     /**
      * 敌人的AI
      */
-    private void ai(){
+    @Override
+    protected void move(){
         if (System.currentTimeMillis() - aiTime > Constant.ENEMY_AI_INTERVAL){
             //给敌人随机一个停止或移动的状态，并随机改变其方向
             setDir(RandomUtil.getRandomNumber(DIR_UP,DIR_RIGHT+1));

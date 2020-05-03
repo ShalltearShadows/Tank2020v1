@@ -186,13 +186,13 @@ public class GameFrame extends Frame implements Runnable{
         }else {
             switch (keyCode){
                 case KeyEvent.VK_UP:
-                case KeyEvent.VK_W: myTank.setDir(Tank.DIR_UP);myTank.setState(Tank.STATE_MOVE); break;
+                case KeyEvent.VK_W: myTank.setDir(DIR_UP);myTank.setState(STATE_MOVE); break;
                 case KeyEvent.VK_DOWN:
-                case KeyEvent.VK_S: myTank.setDir(Tank.DIR_DOWN);myTank.setState(Tank.STATE_MOVE); break;
+                case KeyEvent.VK_S: myTank.setDir(DIR_DOWN);myTank.setState(STATE_MOVE); break;
                 case KeyEvent.VK_LEFT:
-                case KeyEvent.VK_A: myTank.setDir(Tank.DIR_LEFT);myTank.setState(Tank.STATE_MOVE); break;
+                case KeyEvent.VK_A: myTank.setDir(DIR_LEFT);myTank.setState(STATE_MOVE); break;
                 case KeyEvent.VK_RIGHT:
-                case KeyEvent.VK_D: myTank.setDir(Tank.DIR_RIGHT);myTank.setState(Tank.STATE_MOVE); break;
+                case KeyEvent.VK_D: myTank.setDir(DIR_RIGHT);myTank.setState(STATE_MOVE); break;
                 case KeyEvent.VK_J: myTank.fire(); break;
             }
         }
@@ -213,7 +213,7 @@ public class GameFrame extends Frame implements Runnable{
             case KeyEvent.VK_LEFT:
             case KeyEvent.VK_A:
             case KeyEvent.VK_RIGHT:
-            case KeyEvent.VK_D: myTank.setState(Tank.STATE_STOP); break;
+            case KeyEvent.VK_D: myTank.setState(STATE_STOP); break;
         }
 
     }
@@ -402,7 +402,7 @@ public class GameFrame extends Frame implements Runnable{
     private void newGame() {
         gameState = STATE_RUN;
         //创建坦克对象，敌人的坦克对象
-        myTank = new MyTank(FRAME_WIDTH/3,FRAME_HEIGHT-Tank.RADIUS*2,Tank.DIR_UP,select);
+        myTank = new MyTank(FRAME_WIDTH/3,FRAME_HEIGHT-RADIUS*2,DIR_UP,select);
 
         gameMap = new GameMap();
 

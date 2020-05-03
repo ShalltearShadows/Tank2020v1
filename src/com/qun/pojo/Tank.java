@@ -7,7 +7,6 @@
  */
 package com.qun.pojo;
 
-import com.qun.config.Constant;
 import com.qun.game.Explode;
 import com.qun.game.GameFrame;
 import com.qun.map.MapTile;
@@ -17,45 +16,27 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.qun.config.Constant.SIMALL_FONT;
-import static com.qun.config.Constant.STATE_OVER;
+import static com.qun.config.Constant.*;
 
 /**
  * 坦克类
  */
 public abstract class Tank {
 
-    //半径
-    public static final int RADIUS = 30;
-
-    //默认速度 每帧跑4跑pm，4pm/30ms
-    public static final int DEFAULT_SPEED = 4;
-
-    //四个方向
-    public static final int DIR_UP = 0;
-    public static final int DIR_DOWN = 1;
-    public static final int DIR_LEFT = 2;
-    public static final int DIR_RIGHT = 3;
-
-    //坦克的状态：停下、移动、死亡
-    public static final int STATE_STOP = 0;
-    public static final int STATE_MOVE = 1;
-    public static final int STATE_DIED = 2;
-
-    //坦克的初始HP
-    public static final int DEFAULT_HP = 1000;
-
-
-    private String name;
-    private int x , y;//中心位置
-    private int oldX,oldY;
+    protected String name;
+    protected int x , y;//中心位置
+    protected int oldX,oldY;
     private int hp = DEFAULT_HP;
     private int atk;
-    private int speed = DEFAULT_SPEED;
-    private int dir;
+    protected int speed = DEFAULT_SPEED;
+    protected int dir;
     private int state = STATE_STOP;
-    private Color color;
     private boolean isEnemy = false;
+
+    //上次开火时间
+    private long fireTime ;
+
+    //血条
     private BloodBar bloodBar = new BloodBar();
 
     //炮弹
@@ -75,17 +56,14 @@ public abstract class Tank {
         this.x = x;
         this.y = y;
         this.dir = dir;
-        color = RandomUtil.getRandomColor();
         name = RandomUtil.getRandomName();
         atk = 99;
     }
 
     public Tank(){
-        color = RandomUtil.getRandomColor();
         name = RandomUtil.getRandomName();
         atk = 99;
     }
-
 
 
     /**
@@ -97,47 +75,21 @@ public abstract class Tank {
         drawImgTank(g);
         drawBullets(g);
         drawName(g);
-        bloodBar.draw(g);
+        bloodBar.draw(x,y,hp,g);
     }
+
     /**
      * 绘制坦克名字
      */
-    private void drawName(Graphics g){
-        g.setFont(SIMALL_FONT);
-        g.setColor(color);
-        g.drawString(name,x-RADIUS+5,y-RADIUS-15);
-    }
+    protected abstract void drawName(Graphics g);
+
 
     /**
      * 图片绘制坦克
      * @param g
      */
-    public abstract void drawImgTank(Graphics g);
+    protected abstract void drawImgTank(Graphics g);
 
-
-
-    /**
-     * 系统绘制坦克
-     * @param g
-     */
-    private void drawTank(Graphics g){
-        g.setColor(color);
-
-        //绘制坦克的圆
-        g.fillOval(x-RADIUS,y-RADIUS,RADIUS<<1,RADIUS<<1);
-
-        int endX = x;
-        int endY = y;
-
-        //绘制炮管
-        switch (dir){
-            case DIR_UP: g.fillRect(x-1,y-RADIUS*2,3,RADIUS*2); break;
-            case DIR_DOWN: g.fillRect(x-1,y,3,RADIUS*2); break;
-            case DIR_LEFT: g.fillRect(x-RADIUS*2,y-1,RADIUS*2,3); break;
-            case DIR_RIGHT: g.fillRect(x,y-1,RADIUS*2,3); break;
-        }
-
-    }
 
 
     //坦克的状态处理
@@ -150,18 +102,7 @@ public abstract class Tank {
     }
 
     //坦克的移动
-    private void move(){
-        oldX = x;
-        oldY = y;
-        switch (dir){
-            case DIR_UP: y -= speed; if (y < RADIUS + GameFrame.titleBarH){y = RADIUS + GameFrame.titleBarH;} break;
-            case DIR_DOWN: y += speed; if (y > Constant.FRAME_HEIGHT-RADIUS){y = Constant.FRAME_HEIGHT-RADIUS;} break;
-            case DIR_LEFT: x -= speed; if (x < RADIUS){x = RADIUS;} break;
-            case DIR_RIGHT: x += speed; if (x > Constant.FRAME_WIDTH-RADIUS){x = Constant.FRAME_WIDTH-RADIUS;} break;
-        }
-    }
-
-
+    protected abstract void move();
 
 
     /**
@@ -169,10 +110,6 @@ public abstract class Tank {
      * 创建一个炮弹对象，其属性通过坦克获得
      * 然后将创建的炮弹添加到管理炮弹的容器中
      */
-    //上次开火时间
-    private long fireTime ;
-    public static final int FIRE_INTERVAL = 150;
-
     public void fire(){
         if (System.currentTimeMillis()-fireTime<FIRE_INTERVAL){
             return;
@@ -278,7 +215,7 @@ public abstract class Tank {
         if (isEnemy){
             EnemyTankPool.returnTank(this);
         }else {
-            delaySecondToOver(0);
+            GameFrame.setGameState(STATE_OVER);
         }
     }
 
@@ -287,12 +224,12 @@ public abstract class Tank {
     }
 
     /**
-     * 绘制当前坦克.上的所有的爆炸的效果
+     * 绘制当前坦克上的所有的爆炸的效果
      * @param g
      */
     public void drawExplodes(Graphics g) {
-        for (Explode exp1ode : explodes) {
-            exp1ode.draw(g);
+        for (Explode explode : explodes) {
+            explode.draw(g);
         }
 
         for (int i = 0; i < explodes.size(); i++) {
@@ -306,28 +243,6 @@ public abstract class Tank {
     }
 
 
-
-    //内部类表示血条
-    class BloodBar{
-        public static final int BAR_LENGHT = 50;
-        public static final int BAR_HEIGHT = 5;
-
-        public void draw(Graphics g){
-
-            int barX = x - RADIUS + 5;
-
-            //填充底色
-            g.setColor(Color.YELLOW);
-            g.fillRect(barX,y - RADIUS - BAR_HEIGHT*2,BAR_LENGHT,BAR_HEIGHT);
-            //血量
-            g.setColor(Color.RED);
-            g.fillRect(barX,y - RADIUS - BAR_HEIGHT*2,hp*BAR_LENGHT/DEFAULT_HP,BAR_HEIGHT);
-            //边框
-            g.setColor(Color.BLUE);
-            g.drawRect(barX,y - RADIUS - BAR_HEIGHT*2,BAR_LENGHT,BAR_HEIGHT);
-        }
-    }
-
     //坦克的子弹和地图所有的块的碰撞
     public void bulletsCollideMapTiles(List<MapTile> tiles) {
         for (MapTile tile : tiles) {
@@ -340,30 +255,11 @@ public abstract class Tank {
                 MapTilePool.returnMapTile(tile);
                 //当老巢被击毁之后，一秒钟后切换到游戏结束的画面
                 if (tile.isHouse()){
-                    delaySecondToOver(1000);
+                    GameFrame.setGameState(STATE_OVER);
                 }
             }
         }
     }
-
-    /**
-     * 延迟若干毫秒出现游戏结束画面
-     * @param millisSecond
-     */
-    private void delaySecondToOver(int millisSecond){
-        new Thread(){
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                GameFrame.setGameState(STATE_OVER);
-            }
-        }.start();
-    }
-
 
 
     /**
@@ -372,7 +268,6 @@ public abstract class Tank {
      * 点的顺序从左上角的点开始，顺时针遍历
      */
     public boolean isCollideTile(List<MapTile> tiles){
-
         for (MapTile tile : tiles) {
             //点-1
             int tileX = tile.getX();
@@ -382,54 +277,26 @@ public abstract class Tank {
             if(collide){
                 return true;
             }
-
-            //点-2
-            tileX += MapTile.radius;
-            collide = Collide.isCollide(x, y, RADIUS, tileX, tileY);
-            if(collide){
-                return true;
-            }
-
             //点-3
-            tileX += MapTile.radius;
-            collide = Collide.isCollide(x, y, RADIUS, tileX, tileY);
-            if(collide){
-                return true;
-            }
-            //点-4
-            tileY += MapTile.radius;
+            tileX += MapTile.radius*2;
             collide = Collide.isCollide(x, y, RADIUS, tileX, tileY);
             if(collide){
                 return true;
             }
             //点-5
-            tileY += MapTile.radius;
-            collide = Collide.isCollide(x, y, RADIUS, tileX, tileY);
-            if(collide){
-                return true;
-            }
-            //点-6
-            tileX -= MapTile.radius;
+            tileY += MapTile.radius*2;
             collide = Collide.isCollide(x, y, RADIUS, tileX, tileY);
             if(collide){
                 return true;
             }
             //点-7
-            tileX -= MapTile.radius;
-            collide = Collide.isCollide(x, y, RADIUS, tileX, tileY);
-            if(collide){
-                return true;
-            }
-            //点-8
-            tileY -= MapTile.radius;
+            tileX -= MapTile.radius*2;
             collide = Collide.isCollide(x, y, RADIUS, tileX, tileY);
             if(collide){
                 return true;
             }
         }
-
         return false;
-
     }
 
     public void back() {
@@ -454,28 +321,8 @@ public abstract class Tank {
         this.y = y;
     }
 
-    public int getHp() {
-        return hp;
-    }
-
     public void setHp(int hp) {
         this.hp = hp;
-    }
-
-    public int getAtk() {
-        return atk;
-    }
-
-    public void setAtk(int atk) {
-        this.atk = atk;
-    }
-
-    public int getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(int speed) {
-        this.speed = speed;
     }
 
     public int getDir() {
@@ -486,24 +333,8 @@ public abstract class Tank {
         this.dir = dir;
     }
 
-    public int getState() {
-        return state;
-    }
-
     public void setState(int state) {
         this.state = state;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    public boolean isEnemy() {
-        return isEnemy;
     }
 
     public void setEnemy(boolean enemy) {
@@ -513,18 +344,5 @@ public abstract class Tank {
     public List<Bullet> getBullets() {
         return bullets;
     }
-
-    public void setBullets(List<Bullet> bullets) {
-        this.bullets = bullets;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
 
 }

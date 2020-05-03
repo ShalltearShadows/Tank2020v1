@@ -65,6 +65,32 @@ public class Constant {
 
 
 
+    /******************************坦克类常量******************************/
+
+
+    //边长
+    public static final int RADIUS = 30;
+
+    //默认速度 每帧跑4跑pm，4pm/30ms
+    public static final int DEFAULT_SPEED = 4;
+
+    //四个方向
+    public static final int DIR_UP = 0;
+    public static final int DIR_DOWN = 1;
+    public static final int DIR_LEFT = 2;
+    public static final int DIR_RIGHT = 3;
+
+    //坦克的状态：停下、移动、死亡
+    public static final int STATE_STOP = 0;
+    public static final int STATE_MOVE = 1;
+    public static final int STATE_DIED = 2;
+
+    //坦克的初始HP
+    public static final int DEFAULT_HP = 300;
+    //开火间隔
+    public static final int FIRE_INTERVAL = 150;
+
+
 
     /****************************敌军坦克相关******************************/
 
@@ -79,6 +105,10 @@ public class Constant {
 
     //敌人每一帧开火的概率
     public static final double ENEMY_FIRE_PERCENT = 0.04;
+
+
+
+
 
 
 

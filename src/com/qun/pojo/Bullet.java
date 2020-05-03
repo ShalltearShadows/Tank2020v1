@@ -13,6 +13,7 @@ import com.qun.util.ImageUtil;
 import com.qun.util.RandomUtil;
 
 import java.awt.*;
+import static com.qun.config.Constant.*;
 
 /**
  * 炮弹类
@@ -65,10 +66,10 @@ public class Bullet {
 
     private void move(){
         switch (dir){
-            case Tank.DIR_UP: y -= speed; if (y<0) visible=false; break;
-            case Tank.DIR_DOWN: y += speed; if (y>Constant.FRAME_HEIGHT) visible=false; break;
-            case Tank.DIR_LEFT: x -= speed; if (x<0) visible=false; break;
-            case Tank.DIR_RIGHT: x += speed; if (x>Constant.FRAME_WIDTH) visible=false; break;
+            case DIR_UP: y -= speed; if (y<0) visible=false; break;
+            case DIR_DOWN: y += speed; if (y>Constant.FRAME_HEIGHT) visible=false; break;
+            case DIR_LEFT: x -= speed; if (x<0) visible=false; break;
+            case DIR_RIGHT: x += speed; if (x>Constant.FRAME_WIDTH) visible=false; break;
         }
 
 

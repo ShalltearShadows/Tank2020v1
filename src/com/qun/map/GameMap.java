@@ -9,7 +9,6 @@ package com.qun.map;
 
 import com.qun.config.Constant;
 import com.qun.game.GameFrame;
-import com.qun.pojo.Tank;
 import com.qun.util.MapTilePool;
 import com.qun.util.RandomUtil;
 
@@ -17,15 +16,17 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.qun.config.Constant.RADIUS;
+
 /**
  * 游戏地图类
  */
 public class GameMap {
 
-    public static final int MAP_X = Tank.RADIUS*3;
-    public static final int MAP_Y = Tank.RADIUS*3 + GameFrame.titleBarH;
-    public static final int MAP_WIDTH = Constant.FRAME_WIDTH-Tank.RADIUS*6;
-    public static final int MAP_HEIGHT = Constant.FRAME_HEIGHT-Tank.RADIUS*6-GameFrame.titleBarH;
+    public static final int MAP_X = RADIUS*3;
+    public static final int MAP_Y = RADIUS*3 + GameFrame.titleBarH;
+    public static final int MAP_WIDTH = Constant.FRAME_WIDTH-RADIUS*6;
+    public static final int MAP_HEIGHT = Constant.FRAME_HEIGHT-RADIUS*6-GameFrame.titleBarH;
 
     //地图元素块的容器
     private List<MapTile> tiles = new ArrayList<>();

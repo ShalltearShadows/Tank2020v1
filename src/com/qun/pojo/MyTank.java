@@ -7,10 +7,13 @@
  */
 package com.qun.pojo;
 
+import com.qun.config.Constant;
+import com.qun.game.GameFrame;
 import com.qun.util.ImageUtil;
 
 import java.awt.*;
 
+import static com.qun.config.Constant.*;
 
 /**
  * 玩家坦克
@@ -54,8 +57,27 @@ public class MyTank extends Tank {
 
 
     @Override
+    public void drawName(Graphics g) {
+        g.setFont(SIMALL_FONT);
+        g.setColor(Color.GREEN);
+        g.drawString(name,x-RADIUS+5,y-RADIUS-15);
+    }
+
+    @Override
     public void drawImgTank(Graphics g) {
         g.drawImage(tankImg[type][getDir()],getX()-RADIUS,getY()-RADIUS,null);
+    }
+
+    @Override
+    protected void move() {
+        oldX = x;
+        oldY = y;
+        switch (dir){
+            case DIR_UP: y -= speed; if (y < RADIUS + GameFrame.titleBarH){y = RADIUS + GameFrame.titleBarH;} break;
+            case DIR_DOWN: y += speed; if (y > Constant.FRAME_HEIGHT-RADIUS){y = Constant.FRAME_HEIGHT-RADIUS;} break;
+            case DIR_LEFT: x -= speed; if (x < RADIUS){x = RADIUS;} break;
+            case DIR_RIGHT: x += speed; if (x > Constant.FRAME_WIDTH-RADIUS){x = Constant.FRAME_WIDTH-RADIUS;} break;
+        }
     }
 
     public int getType() {
