@@ -7,10 +7,9 @@
  */
 package com.qun.game;
 
+import com.qun.builder.*;
 import com.qun.map.GameMap;
-import com.qun.pojo.EnemyTank;
-import com.qun.pojo.MyTank;
-import com.qun.pojo.Tank;
+import com.qun.util.EnemyPool;
 import com.qun.util.ImageUtil;
 
 import java.awt.*;
@@ -22,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.qun.config.Constant.*;
+
+;
 
 /**
  * 游戏的主窗口
@@ -41,10 +42,10 @@ public class GameFrame extends Frame implements Runnable{
     private Image offScreenImage = null;
 
     //定义坦克对象
-    private MyTank myTank;
+    private Tank myTank;
 
     //敌人的坦克
-    private List<Tank> enemies = new ArrayList<>();
+    private List<Tank> enemies = new ArrayList<Tank>();
 
     //第一次使用的时候加载，而不是类加载的时候加载
     private Image overImg = null;
@@ -179,8 +180,8 @@ public class GameFrame extends Frame implements Runnable{
     private void KeyPressedEventRun(int keyCode) {
         if (select==-1){
             switch (keyCode){
-                case KeyEvent.VK_J:select = MyTank.TYPE_BROWN; break;
-                case KeyEvent.VK_K:select = MyTank.TYPE_PURPLE; break;
+                case KeyEvent.VK_J:select = TYPE_BROWN; break;
+                case KeyEvent.VK_K:select = TYPE_PURPLE; break;
             }
             myTank.setType(select);
         }else {
@@ -342,23 +343,18 @@ public class GameFrame extends Frame implements Runnable{
         //绘制黑色的背景
         g.setColor(Color.BLACK);
         g.fillRect( 0, 0, FRAME_WIDTH, FRAME_HEIGHT) ;
-
-        //绘制地图
-        gameMap.draw(g);
-
-        //坦克与炮弹碰撞的判断
-        bulletCollideTank();
-
-        //炮弹和砖块的碰撞
-        CollideMapTile();
-
         drawEnemies(g);
 
         myTank.draw(g);
 
+        //绘制地图
+        gameMap.draw(g);
+        //炮弹和砖块的碰撞
+        CollideMapTile();
+        //坦克与炮弹碰撞的判断
+        bulletCollideTank();
         //爆炸效果
         drawExplodes(g);
-
         //游戏胜利
         gameWin();
 
@@ -372,8 +368,8 @@ public class GameFrame extends Frame implements Runnable{
         g.setColor(Color.BLACK);
         g.fillRect( 0, 0, FRAME_WIDTH, FRAME_HEIGHT) ;
 
-        g.drawImage(MyTank.tankImg[MyTank.TYPE_BROWN][0],FRAME_WIDTH/2-200,FRAME_HEIGHT/2+100,null);
-        g.drawImage(MyTank.tankImg[MyTank.TYPE_PURPLE][0],FRAME_WIDTH/2+200,FRAME_HEIGHT/2+100,null);
+        g.drawImage(Tank.tankImg[TYPE_BROWN][0],FRAME_WIDTH/2-200,FRAME_HEIGHT/2+100,null);
+        g.drawImage(Tank.tankImg[TYPE_PURPLE][0],FRAME_WIDTH/2+200,FRAME_HEIGHT/2+100,null);
 
         g.setColor(Color.GREEN);
         g.setFont(MIDDLE_FONT);
@@ -386,13 +382,15 @@ public class GameFrame extends Frame implements Runnable{
     private void drawEnemies (Graphics g){
         for (int i = 0; i < enemies.size(); i++) {
             Tank enemy = enemies.get(i);
-            if(enemy. isDie()){
+            if(enemy.isDie()){
                 enemies.remove(i);
+                EnemyPool.returnTank(enemy);
                 i--;
                 continue;
             }
             enemy.draw(g);
         }
+
     }
 
 
@@ -401,8 +399,12 @@ public class GameFrame extends Frame implements Runnable{
      */
     private void newGame() {
         gameState = STATE_RUN;
-        //创建坦克对象，敌人的坦克对象
-        myTank = new MyTank(FRAME_WIDTH/3,FRAME_HEIGHT-RADIUS*2,DIR_UP,select);
+
+        TankDirector director = new TankDirector();
+        TankBuilder builder = new PlayerTankBuilder();
+        director.makeTank(builder);
+
+        myTank = builder.getTank();
 
         gameMap = new GameMap();
 
@@ -422,7 +424,7 @@ public class GameFrame extends Frame implements Runnable{
                     }
 
                     if (!stopBorn){
-                        Tank enemy = EnemyTank.createEnemy();
+                        Tank enemy = EnemyPool.getTank();
                         enemies.add(enemy);
                     }else {
                         break;
@@ -440,7 +442,7 @@ public class GameFrame extends Frame implements Runnable{
 
     private void gameWin(){
         long now = System.currentTimeMillis();
-        if (((now - enemyTime) > (ENEMY_BORN_INTERVAL * 10))&&(enemies.size()==0)){
+        if (((now - enemyTime) > (ENEMY_BORN_INTERVAL * ENEMY_MAX_COUNT))&&(enemies.size()==0)){
             gameState = STATE_WIN;
         }
     }

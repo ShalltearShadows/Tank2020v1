@@ -1,15 +1,18 @@
 /**
  * Created by IntelliJ IDEA.
  *
- * @Author: LQ
- * @Date: 2020/4/23
- * @Time: 8:34
+ * @Author: LiQun
+ * @Date: 2020/5/3
+ * @Time: 15:21
  */
-package com.qun.pojo;
+package com.qun.builder;
 
+import com.qun.config.Constant;
 import com.qun.game.Explode;
 import com.qun.game.GameFrame;
 import com.qun.map.MapTile;
+import com.qun.pojo.BloodBar;
+import com.qun.pojo.Bullet;
 import com.qun.util.*;
 
 import java.awt.*;
@@ -18,33 +21,45 @@ import java.util.List;
 
 import static com.qun.config.Constant.*;
 
-/**
- * 坦克类
- */
-public abstract class Tank {
-
-    protected String name;
+public class Tank {
     protected int x , y;//中心位置
     protected int oldX,oldY;
-    private int hp = DEFAULT_HP;
-    private int atk;
-    protected int speed = DEFAULT_SPEED;
     protected int dir;
     private int state = STATE_STOP;
-    private boolean isEnemy = false;
-
-    //上次开火时间
+    private boolean isEnemy ;
     private long fireTime ;
+    private long aiTime;
+    private int type;
+    private String[] color = {"brown","purple","cyan","yellow"};
+    public static Image[][] tankImg;
 
+    protected String name;
+
+    private int hp = DEFAULT_HP;
+
+    private int atk;
+
+    protected int speed = DEFAULT_SPEED;
     //血条
     private BloodBar bloodBar = new BloodBar();
 
     //炮弹
-    private List<Bullet> bullets = new ArrayList();
+    private List<Bullet> bullets = new ArrayList<>();
 
     //爆炸
     private List<Explode> explodes = new ArrayList<>();
 
+    //在静态块初始化
+    {
+        tankImg = new Image[4][4];
+
+        for (int i = 0; i < tankImg.length; i++) {
+            tankImg[i][0] = ImageUtil.createImage("res/"+color[i]+"/up.png");
+            tankImg[i][1] = ImageUtil.createImage("res/"+color[i]+"/down.png");
+            tankImg[i][2] = ImageUtil.createImage("res/"+color[i]+"/left.png");
+            tankImg[i][3] = ImageUtil.createImage("res/"+color[i]+"/right.png");
+        }
+    }
 
     /**
      * 创建的玩家的坦克
@@ -56,15 +71,19 @@ public abstract class Tank {
         this.x = x;
         this.y = y;
         this.dir = dir;
-        name = RandomUtil.getRandomName();
-        atk = 99;
+        isEnemy = false;
     }
 
     public Tank(){
-        name = RandomUtil.getRandomName();
-        atk = 99;
-    }
+        isEnemy = true;
+        x = RandomUtil.getRandomNumber(0,2) == 0 ? RADIUS : Constant.FRAME_WIDTH - RADIUS;
+        y = GameFrame.titleBarH + RADIUS;
 
+        type = RandomUtil.getRandomNumber(2,4);
+
+        dir = DIR_DOWN;
+        state = STATE_MOVE;
+    }
 
     /**
      * 绘制图像
@@ -81,29 +100,68 @@ public abstract class Tank {
     /**
      * 绘制坦克名字
      */
-    protected abstract void drawName(Graphics g);
+    protected void drawName(Graphics g){
+        if (isEnemy){
+            g.setColor(Color.RED);
+        }else {
+            g.setColor(Color.GREEN);
+        }
+
+        g.setFont(SIMALL_FONT);
+
+        g.drawString(name,x-RADIUS+5,y-RADIUS-15);
+    }
 
 
     /**
      * 图片绘制坦克
      * @param g
      */
-    protected abstract void drawImgTank(Graphics g);
+    public void drawImgTank(Graphics g) {
+        g.drawImage(tankImg[type][getDir()],getX()-RADIUS,getY()-RADIUS,null);
+    }
 
+
+    //坦克的移动
+    private void move(){
+
+        oldX = x;
+        oldY = y;
+        switch (dir){
+            case DIR_UP: y -= speed; if (y < RADIUS + GameFrame.titleBarH){y = RADIUS + GameFrame.titleBarH;} break;
+            case DIR_DOWN: y += speed; if (y > Constant.FRAME_HEIGHT-RADIUS){y = Constant.FRAME_HEIGHT-RADIUS;} break;
+            case DIR_LEFT: x -= speed; if (x < RADIUS){x = RADIUS;} break;
+            case DIR_RIGHT: x += speed; if (x > Constant.FRAME_WIDTH-RADIUS){x = Constant.FRAME_WIDTH-RADIUS;} break;
+        }
+    }
+
+
+    private void ai(){
+        if (System.currentTimeMillis() - aiTime > Constant.ENEMY_AI_INTERVAL){
+            //给敌人随机一个停止或移动的状态，并随机改变其方向
+            setDir(RandomUtil.getRandomNumber(DIR_UP,DIR_RIGHT+1));
+            setState(RandomUtil.getRandomNumber(0,2) == 0 ? STATE_STOP : STATE_MOVE);
+            aiTime = System.currentTimeMillis();
+        }
+
+        //敌人的随机开火
+        if (Math.random() < Constant.ENEMY_FIRE_PERCENT){
+            fire();
+        }
+    }
 
 
     //坦克的状态处理
     private void logic(){
+        if (isEnemy){
+            ai();
+        }
         switch (state){
             case STATE_STOP: break;
             case STATE_MOVE: move(); break;
             case STATE_DIED: break;
         }
     }
-
-    //坦克的移动
-    protected abstract void move();
-
 
     /**
      * 坦克开火的方法
@@ -204,20 +262,13 @@ public abstract class Tank {
         if(hp < 0){
             hp=0;
             state = STATE_DIED;
-            die();
+            if (!isEnemy){
+                GameFrame.setGameState(STATE_OVER);
+            }
+
         }
     }
 
-    /**
-     * 坦克死亡
-     */
-    private void die(){
-        if (isEnemy){
-            EnemyTankPool.returnTank(this);
-        }else {
-            GameFrame.setGameState(STATE_OVER);
-        }
-    }
 
     public boolean isDie(){
         return state == STATE_DIED;
@@ -345,4 +396,71 @@ public abstract class Tank {
         return bullets;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public int getAtk() {
+        return atk;
+    }
+
+    public void setAtk(int atk) {
+        this.atk = atk;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public BloodBar getBloodBar() {
+        return bloodBar;
+    }
+
+    public void setBloodBar(BloodBar bloodBar) {
+        this.bloodBar = bloodBar;
+    }
+
+    public void setBullets(List<Bullet> bullets) {
+        this.bullets = bullets;
+    }
+
+    public List<Explode> getExplodes() {
+        return explodes;
+    }
+
+    public void setExplodes(List<Explode> explodes) {
+        this.explodes = explodes;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public long getAiTime() {
+        return aiTime;
+    }
+
+    public void setAiTime(long aiTime) {
+        this.aiTime = aiTime;
+    }
+
+    public boolean isEnemy() {
+        return isEnemy;
+    }
 }

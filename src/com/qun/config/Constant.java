@@ -67,6 +67,11 @@ public class Constant {
 
     /******************************坦克类常量******************************/
 
+    public static final int TYPE_BROWN = 0;
+    public static final int TYPE_PURPLE = 1;
+    public static final int TYPE_CYAN = 2;
+    public static final int TYPE_YELLOW = 3;
+
 
     //边长
     public static final int RADIUS = 30;
@@ -86,7 +91,7 @@ public class Constant {
     public static final int STATE_DIED = 2;
 
     //坦克的初始HP
-    public static final int DEFAULT_HP = 300;
+    public static final int DEFAULT_HP = 100;
     //开火间隔
     public static final int FIRE_INTERVAL = 150;
 
@@ -95,16 +100,16 @@ public class Constant {
     /****************************敌军坦克相关******************************/
 
     //最大敌人坦克数量10
-    public static final int ENEMY_MAX_COUNT = 10;
+    public static final int ENEMY_MAX_COUNT = 5;
 
     //敌人的出生间隔
     public static final int ENEMY_BORN_INTERVAL = 3000;
 
     //敌人状态的切换间隔
-    public static final int ENEMY_AI_INTERVAL = 3000;
+    public static final int ENEMY_AI_INTERVAL = 2000;
 
     //敌人每一帧开火的概率
-    public static final double ENEMY_FIRE_PERCENT = 0.04;
+    public static final double ENEMY_FIRE_PERCENT = 0.05;
 
 
 
