@@ -5,7 +5,7 @@
  * @Date: 2020/4/27
  * @Time: 12:58
  */
-package com.qun.game;
+package com.qun.pojo;
 
 import com.qun.util.ImageUtil;
 

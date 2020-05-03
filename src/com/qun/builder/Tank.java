@@ -8,7 +8,7 @@
 package com.qun.builder;
 
 import com.qun.config.Constant;
-import com.qun.game.Explode;
+import com.qun.pojo.Explode;
 import com.qun.game.GameFrame;
 import com.qun.map.MapTile;
 import com.qun.pojo.BloodBar;
@@ -76,8 +76,8 @@ public class Tank {
 
     public Tank(){
         isEnemy = true;
-        x = RandomUtil.getRandomNumber(0,2) == 0 ? RADIUS : Constant.FRAME_WIDTH - RADIUS;
-        y = GameFrame.titleBarH + RADIUS;
+        x = RandomUtil.getRandomNumber(0,2) == 0 ? TANK_RADIUS : Constant.FRAME_WIDTH - TANK_RADIUS;
+        y = GameFrame.titleBarH + TANK_RADIUS;
 
         type = RandomUtil.getRandomNumber(2,4);
 
@@ -109,7 +109,7 @@ public class Tank {
 
         g.setFont(SIMALL_FONT);
 
-        g.drawString(name,x-RADIUS+5,y-RADIUS-15);
+        g.drawString(name,x-TANK_RADIUS+5,y-TANK_RADIUS-15);
     }
 
 
@@ -118,7 +118,7 @@ public class Tank {
      * @param g
      */
     public void drawImgTank(Graphics g) {
-        g.drawImage(tankImg[type][getDir()],getX()-RADIUS,getY()-RADIUS,null);
+        g.drawImage(tankImg[type][getDir()],getX()-TANK_RADIUS,getY()-TANK_RADIUS,null);
     }
 
 
@@ -128,10 +128,10 @@ public class Tank {
         oldX = x;
         oldY = y;
         switch (dir){
-            case DIR_UP: y -= speed; if (y < RADIUS + GameFrame.titleBarH){y = RADIUS + GameFrame.titleBarH;} break;
-            case DIR_DOWN: y += speed; if (y > Constant.FRAME_HEIGHT-RADIUS){y = Constant.FRAME_HEIGHT-RADIUS;} break;
-            case DIR_LEFT: x -= speed; if (x < RADIUS){x = RADIUS;} break;
-            case DIR_RIGHT: x += speed; if (x > Constant.FRAME_WIDTH-RADIUS){x = Constant.FRAME_WIDTH-RADIUS;} break;
+            case DIR_UP: y -= speed; if (y < TANK_RADIUS + GameFrame.titleBarH){y = TANK_RADIUS + GameFrame.titleBarH;} break;
+            case DIR_DOWN: y += speed; if (y > Constant.FRAME_HEIGHT-TANK_RADIUS){y = Constant.FRAME_HEIGHT-TANK_RADIUS;} break;
+            case DIR_LEFT: x -= speed; if (x < TANK_RADIUS){x = TANK_RADIUS;} break;
+            case DIR_RIGHT: x += speed; if (x > Constant.FRAME_WIDTH-TANK_RADIUS){x = Constant.FRAME_WIDTH-TANK_RADIUS;} break;
         }
     }
 
@@ -173,19 +173,19 @@ public class Tank {
             return;
         }
 
+        Bullet bullet = BulletPool.getBullet();
+
         int bulletX = x;
         int bulletY = y;
 
         switch (dir){
-            case DIR_UP: bulletY -= RADIUS; break;
-            case DIR_DOWN: bulletY += RADIUS; break;
-            case DIR_LEFT: bulletX -= RADIUS; break;
-            case DIR_RIGHT: bulletX += RADIUS; break;
+            case DIR_UP: bulletY -= TANK_RADIUS; break;
+            case DIR_DOWN: bulletY += TANK_RADIUS; break;
+            case DIR_LEFT: bulletX -= TANK_RADIUS; break;
+            case DIR_RIGHT: bulletX += TANK_RADIUS; break;
         }
 
-        Bullet bullet = BulletPool.getBullet();
-
-        bullet.initBulletByPool(bulletX, bulletY, dir, atk,true);
+        bullet.initBullet(bulletX, bulletY, dir, atk,true);
 
         bullets.add(bullet);
 
@@ -197,16 +197,14 @@ public class Tank {
      * @param g
      */
     private void drawBullets(Graphics g){
-        for (Bullet bullet : bullets) {
-            bullet.draw(g);
-        }
-
         for (int i = 0; i < bullets.size(); i++) {
             Bullet bullet = bullets.get(i);
             if (!bullet.isVisible()){
                 BulletPool.returnBullet(bullets.remove(i));
                 i--;
+                continue;
             }
+            bullet.draw(g);
         }
     }
 
@@ -232,7 +230,7 @@ public class Tank {
             int bulletY = bullet.getY();
 
             //炮弹和坦克碰上了
-            if (Collide.isCollide(x,y,RADIUS,bulletX,bulletY)){
+            if (Collide.isCollide(x,y,TANK_RADIUS,bulletX,bulletY)){
                 //炮弹消失
                 bullet.setVisible(false);
                 //坦克收到伤害
@@ -323,26 +321,26 @@ public class Tank {
             //点-1
             int tileX = tile.getX();
             int tileY = tile.getY();
-            boolean collide = Collide.isCollide(x, y, RADIUS, tileX, tileY);
+            boolean collide = Collide.isCollide(x, y, TANK_RADIUS, tileX, tileY);
             //如果碰上了就直接返回，否则继续判断下一个点
             if(collide){
                 return true;
             }
             //点-3
             tileX += MapTile.radius*2;
-            collide = Collide.isCollide(x, y, RADIUS, tileX, tileY);
+            collide = Collide.isCollide(x, y, TANK_RADIUS, tileX, tileY);
             if(collide){
                 return true;
             }
             //点-5
             tileY += MapTile.radius*2;
-            collide = Collide.isCollide(x, y, RADIUS, tileX, tileY);
+            collide = Collide.isCollide(x, y, TANK_RADIUS, tileX, tileY);
             if(collide){
                 return true;
             }
             //点-7
             tileX -= MapTile.radius*2;
-            collide = Collide.isCollide(x, y, RADIUS, tileX, tileY);
+            collide = Collide.isCollide(x, y, TANK_RADIUS, tileX, tileY);
             if(collide){
                 return true;
             }
@@ -360,16 +358,8 @@ public class Tank {
         return x;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
     public int getY() {
         return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
     }
 
     public void setHp(int hp) {
@@ -388,44 +378,20 @@ public class Tank {
         this.state = state;
     }
 
-    public void setEnemy(boolean enemy) {
-        isEnemy = enemy;
-    }
-
     public List<Bullet> getBullets() {
         return bullets;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public int getHp() {
-        return hp;
-    }
-
-    public int getAtk() {
-        return atk;
-    }
-
     public void setAtk(int atk) {
         this.atk = atk;
     }
 
-    public int getSpeed() {
-        return speed;
-    }
-
     public void setSpeed(int speed) {
         this.speed = speed;
-    }
-
-    public BloodBar getBloodBar() {
-        return bloodBar;
     }
 
     public void setBloodBar(BloodBar bloodBar) {
@@ -436,31 +402,12 @@ public class Tank {
         this.bullets = bullets;
     }
 
-    public List<Explode> getExplodes() {
-        return explodes;
-    }
-
     public void setExplodes(List<Explode> explodes) {
         this.explodes = explodes;
-    }
-
-    public int getType() {
-        return type;
     }
 
     public void setType(int type) {
         this.type = type;
     }
 
-    public long getAiTime() {
-        return aiTime;
-    }
-
-    public void setAiTime(long aiTime) {
-        this.aiTime = aiTime;
-    }
-
-    public boolean isEnemy() {
-        return isEnemy;
-    }
 }

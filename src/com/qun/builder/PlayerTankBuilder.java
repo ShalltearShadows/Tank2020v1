@@ -19,7 +19,7 @@ public class PlayerTankBuilder extends TankBuilder {
     private Tank tank;
 
     public PlayerTankBuilder() {
-        tank = new Tank(FRAME_WIDTH/3,FRAME_HEIGHT-RADIUS*2,DIR_UP);
+        tank = new Tank(FRAME_WIDTH/3,FRAME_HEIGHT-TANK_RADIUS*2,DIR_UP);
     }
 
     @Override

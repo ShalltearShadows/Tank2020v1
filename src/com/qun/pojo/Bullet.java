@@ -13,6 +13,7 @@ import com.qun.util.ImageUtil;
 import com.qun.util.RandomUtil;
 
 import java.awt.*;
+
 import static com.qun.config.Constant.*;
 
 /**
@@ -52,8 +53,9 @@ public class Bullet {
      * @param g
      */
     public void draw(Graphics g){
-        if (!visible)return;
+
         logic();
+
         g.drawImage(bulletImg[color],x-RADIUS,y-RADIUS,null);
     }
 
@@ -71,15 +73,13 @@ public class Bullet {
             case DIR_LEFT: x -= speed; if (x<0) visible=false; break;
             case DIR_RIGHT: x += speed; if (x>Constant.FRAME_WIDTH) visible=false; break;
         }
-
-
     }
 
     /**
      * 对象池初始化
      * @return
      */
-    public void initBulletByPool(int x, int y, int dir, int atk, Boolean visible) {
+    public void initBullet(int x, int y, int dir, int atk, Boolean visible) {
         this.x = x;
         this.y = y;
         this.dir = dir;

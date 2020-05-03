@@ -44,9 +44,9 @@ public class Constant {
     public static final int STATE_OVER = 4;
 
     public static final String[] MENUS = {
-            "开始游戏",
-            "继续游戏",
-            "游戏帮助",
+            "第一地图",
+            "第二地图",
+            "随机地图",
             "游戏关于",
             "退出游戏",
     };
@@ -72,9 +72,8 @@ public class Constant {
     public static final int TYPE_CYAN = 2;
     public static final int TYPE_YELLOW = 3;
 
-
     //边长
-    public static final int RADIUS = 30;
+    public static final int TANK_RADIUS = 30;
 
     //默认速度 每帧跑4跑pm，4pm/30ms
     public static final int DEFAULT_SPEED = 4;

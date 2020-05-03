@@ -166,9 +166,9 @@ public class GameFrame extends Frame implements Runnable{
 
             case KeyEvent.VK_ENTER:
                 switch (menuIndex){
-                    case 0: newGame(); break;
-                    case 1: break;
-                    case 2: break;
+                    case 0: newGame(1); break;
+                    case 1: newGame(2); break;
+                    case 2: newGame(3); break;
                     case 3: break;
                     case 4: System.exit(0);break;
                 }
@@ -397,7 +397,7 @@ public class GameFrame extends Frame implements Runnable{
     /**
      * 开始新游戏的方法
      */
-    private void newGame() {
+    private void newGame(int mapType) {
         gameState = STATE_RUN;
 
         TankDirector director = new TankDirector();
@@ -406,7 +406,7 @@ public class GameFrame extends Frame implements Runnable{
 
         myTank = builder.getTank();
 
-        gameMap = new GameMap();
+        gameMap = GameMap.getInstance(mapType);
 
         enemyTime = System.currentTimeMillis();
 

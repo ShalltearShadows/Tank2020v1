@@ -16,17 +16,17 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.qun.config.Constant.RADIUS;
+import static com.qun.config.Constant.*;
 
 /**
  * 游戏地图类
  */
 public class GameMap {
 
-    public static final int MAP_X = RADIUS*3;
-    public static final int MAP_Y = RADIUS*3 + GameFrame.titleBarH;
-    public static final int MAP_WIDTH = Constant.FRAME_WIDTH-RADIUS*6;
-    public static final int MAP_HEIGHT = Constant.FRAME_HEIGHT-RADIUS*6-GameFrame.titleBarH;
+    private static final int MAP_X = TANK_RADIUS*3;
+    private static final int MAP_Y = TANK_RADIUS*3 + GameFrame.titleBarH;
+    private static final int MAP_WIDTH = Constant.FRAME_WIDTH-TANK_RADIUS*6;
+    private static final int MAP_HEIGHT = Constant.FRAME_HEIGHT-TANK_RADIUS*6-GameFrame.titleBarH;
 
     //地图元素块的容器
     private List<MapTile> tiles = new ArrayList<>();
@@ -34,10 +34,23 @@ public class GameMap {
     //大本营
     private TankHouse house;
 
-    public GameMap() {
-        secondMap();
+    private static GameMap gameMap;
+
+    private GameMap(int type) {
+        switch (type){
+            case 1: secondMap(); break;
+            case 2: firstMap(); break;
+            case 3: randomMap(); break;
+        }
         initHouse();
     }
+
+
+    public static GameMap getInstance(int type){
+        gameMap = new GameMap(type);
+        return gameMap;
+    }
+
 
     private void initHouse(){
         //初始化大本营
@@ -47,11 +60,11 @@ public class GameMap {
 
 
     /**
-     * 初始化地图砖块
+     * 随机地图
      */
     private void randomMap(){
         //得到CONUT个随机位置的砖块，添加到容器中
-        final int COUNT = 20;
+        final int COUNT = 30;
 
         for (int i = 0; i < COUNT; i++) {
             MapTile tile = MapTilePool.getMapTile();
