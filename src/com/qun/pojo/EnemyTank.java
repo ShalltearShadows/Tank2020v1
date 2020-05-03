@@ -94,10 +94,8 @@ public class EnemyTank extends Tank {
 
     @Override
     public void drawImgTank(Graphics g){
-        move();
         g.drawImage(enemyImg[tpye][getDir()],getX()-RADIUS,getY()-RADIUS,null);
     }
-
 
     /**
      * 敌人的AI
@@ -109,6 +107,15 @@ public class EnemyTank extends Tank {
             setDir(RandomUtil.getRandomNumber(DIR_UP,DIR_RIGHT+1));
             setState(RandomUtil.getRandomNumber(0,2) == 0 ? STATE_STOP : STATE_MOVE);
             aiTime = System.currentTimeMillis();
+        }
+
+        oldX = x;
+        oldY = y;
+        switch (dir){
+            case DIR_UP: y -= speed; if (y < RADIUS + GameFrame.titleBarH){y = RADIUS + GameFrame.titleBarH;} break;
+            case DIR_DOWN: y += speed; if (y > Constant.FRAME_HEIGHT-RADIUS){y = Constant.FRAME_HEIGHT-RADIUS;} break;
+            case DIR_LEFT: x -= speed; if (x < RADIUS){x = RADIUS;} break;
+            case DIR_RIGHT: x += speed; if (x > Constant.FRAME_WIDTH-RADIUS){x = Constant.FRAME_WIDTH-RADIUS;} break;
         }
 
         //敌人的随机开火
