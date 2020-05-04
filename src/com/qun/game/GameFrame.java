@@ -52,6 +52,8 @@ public class GameFrame extends Frame implements Runnable{
 
     private Image victoryImg = null;
 
+    private Image helpImg = null;
+
     //地图容器
     private GameMap gameMap;
 
@@ -141,10 +143,6 @@ public class GameFrame extends Frame implements Runnable{
         });
     }
 
-    private void drawHelp(Graphics g) {
-
-    }
-
     //菜单状态按下的按键的处理
     private void KeyPressedEventMenu(int keyCode) {
         switch (keyCode){
@@ -169,8 +167,8 @@ public class GameFrame extends Frame implements Runnable{
                     case 0: newGame(1); break;
                     case 1: newGame(2); break;
                     case 2: newGame(3); break;
-                    case 3: break;
-                    case 4: System.exit(0);break;
+                    case 3: gameState = STATE_HELP; break;
+                    case 4: System.exit(0); break;
                 }
         }
     }
@@ -200,7 +198,9 @@ public class GameFrame extends Frame implements Runnable{
     }
 
     private void KeyPressedEventHelp(int keyCode) {
-
+        if (keyCode == KeyEvent.VK_ENTER){
+            gameState = STATE_MENU;
+        }
     }
 
     //按键松开时，让坦克停下
@@ -271,8 +271,6 @@ public class GameFrame extends Frame implements Runnable{
      * @param gbb 缓冲区画笔对象，系统提供
      */
     private void drawMenu(Graphics gbb){
-
-
         //绘制黑色的背景
         gbb.setColor(Color.BLACK);
         gbb.fillRect( 0, 0, FRAME_WIDTH, FRAME_HEIGHT) ;
@@ -294,10 +292,17 @@ public class GameFrame extends Frame implements Runnable{
 
             gbb.drawString(MENUS[i],x,y + DIS*i);
         }
-
-
     }
 
+    private void drawHelp(Graphics g) {
+        if (helpImg == null){
+            helpImg = ImageUtil.createImage("res/help.png");
+        }
+
+        int imgW = helpImg.getWidth(null);
+        int imgH = helpImg.getHeight(null);
+        g.drawImage(helpImg,FRAME_WIDTH-imgW>>1,FRAME_HEIGHT-imgH>>1,null);
+    }
 
     private void drawWin(Graphics g){
         if (victoryImg == null){

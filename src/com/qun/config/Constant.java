@@ -31,7 +31,7 @@ public class Constant {
     public static final int FRAME_X = (SCREEN_W - FRAME_WIDTH ) >> 1;
     public static final int FRAME_Y = (SCREEN_H - FRAME_HEIGHT ) >> 1;
 
-
+//    public static final Image HELP_IMAGE = ImageUtil.createImage("res/help.png");
 
 
 
@@ -47,7 +47,7 @@ public class Constant {
             "第一地图",
             "第二地图",
             "随机地图",
-            "游戏关于",
+            "游戏说明",
             "退出游戏",
     };
 
