@@ -16,7 +16,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.qun.config.Constant.*;
+import static com.qun.config.Constant.TANK_RADIUS;
 
 /**
  * 游戏地图类
@@ -29,7 +29,7 @@ public class GameMap {
     private static final int MAP_HEIGHT = Constant.FRAME_HEIGHT-TANK_RADIUS*6-GameFrame.titleBarH;
 
     //地图元素块的容器
-    private List<MapTile> tiles = new ArrayList<>();
+    private List<MapTile> tiles;
 
     //大本营
     private TankHouse house;
@@ -37,12 +37,13 @@ public class GameMap {
     private static GameMap gameMap;
 
     private GameMap(int type) {
+        tiles = new ArrayList<>();
+        initHouse();
         switch (type){
             case 1: secondMap(); break;
             case 2: firstMap(); break;
             case 3: randomMap(); break;
         }
-        initHouse();
     }
 
 
@@ -64,7 +65,7 @@ public class GameMap {
      */
     private void randomMap(){
         //得到CONUT个随机位置的砖块，添加到容器中
-        final int COUNT = 30;
+        final int COUNT = 25;
 
         for (int i = 0; i < COUNT; i++) {
             MapTile tile = MapTilePool.getMapTile();
@@ -105,6 +106,9 @@ public class GameMap {
         }
     }
 
+    /**
+     * 地图砖块的排序
+     */
     public void firstMap(){
         addRow(MAP_X,MAP_Y,MAP_X+MAP_WIDTH,MapTile.TYPE_NORMAL,0);
         addRow(MAP_X,MAP_Y+MapTile.tileW*2,MAP_X+MAP_WIDTH,MapTile.TYPE_NORMAL,0);
@@ -166,8 +170,10 @@ public class GameMap {
     public void clearDestoryTile() {
         for (int i = 0; i < tiles.size(); i++) {
             MapTile tile = tiles.get(i);
-            if (!tile.isVisible())
+            if (!tile.isVisible()){
                 tiles.remove(i);
+            }
+
         }
     }
 

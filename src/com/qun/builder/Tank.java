@@ -300,12 +300,12 @@ public class Tank {
                 addExplode(tile.getX()+MapTile.tileW/2,tile.getY()+MapTile.tileW/2);
                 //销毁砖块
                 tile.setVisible(false);
-                //归还对象池
-                MapTilePool.returnMapTile(tile);
                 //当老巢被击毁之后，一秒钟后切换到游戏结束的画面
                 if (tile.isHouse()){
                     GameFrame.setGameState(STATE_OVER);
                 }
+                //归还对象池
+                MapTilePool.returnMapTile(tile);
             }
         }
     }
@@ -370,6 +370,14 @@ public class Tank {
         return dir;
     }
 
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
     public void setDir(int dir) {
         this.dir = dir;
     }
@@ -410,4 +418,11 @@ public class Tank {
         this.type = type;
     }
 
+    public int getHp() {
+        return hp;
+    }
+
+    public List<Explode> getExplodes() {
+        return explodes;
+    }
 }

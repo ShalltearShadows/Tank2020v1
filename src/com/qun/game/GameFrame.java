@@ -9,7 +9,7 @@ package com.qun.game;
 
 import com.qun.builder.*;
 import com.qun.map.GameMap;
-import com.qun.util.EnemyPool;
+import com.qun.util.EnemyTankPool;
 import com.qun.util.ImageUtil;
 
 import java.awt.*;
@@ -57,7 +57,8 @@ public class GameFrame extends Frame implements Runnable{
     //地图容器
     private GameMap gameMap;
 
-    private long enemyTime;
+    private int count = 0;
+
 
     /**
      * 对窗口进行初始化
@@ -116,11 +117,10 @@ public class GameFrame extends Frame implements Runnable{
                 //返回按下的按键
                 int keyCode = e.getKeyCode();
 
-                //
                 switch (gameState){
-                    case STATE_MENU : KeyPressedEventMenu(keyCode); break;
-                    case STATE_RUN : KeyPressedEventRun(keyCode); break;
-                    case STATE_HELP : KeyPressedEventHelp(keyCode); break;
+                    case STATE_MENU : keyPressedEventMenu(keyCode); break;
+                    case STATE_RUN : keyPressedEventRun(keyCode); break;
+                    case STATE_HELP : keyPressedEventHelp(keyCode); break;
                     case STATE_WIN :
                     case STATE_OVER : KeyPressedEventOverOrWin(keyCode); break;
                 }
@@ -144,7 +144,7 @@ public class GameFrame extends Frame implements Runnable{
     }
 
     //菜单状态按下的按键的处理
-    private void KeyPressedEventMenu(int keyCode) {
+    private void keyPressedEventMenu(int keyCode) {
         switch (keyCode){
             case KeyEvent.VK_UP:
             case KeyEvent.VK_W:
@@ -175,7 +175,7 @@ public class GameFrame extends Frame implements Runnable{
 
 
     //游戏中按下的按键的处理
-    private void KeyPressedEventRun(int keyCode) {
+    private void keyPressedEventRun(int keyCode) {
         if (select==-1){
             switch (keyCode){
                 case KeyEvent.VK_J:select = TYPE_BROWN; break;
@@ -197,7 +197,7 @@ public class GameFrame extends Frame implements Runnable{
         }
     }
 
-    private void KeyPressedEventHelp(int keyCode) {
+    private void keyPressedEventHelp(int keyCode) {
         if (keyCode == KeyEvent.VK_ENTER){
             gameState = STATE_MENU;
         }
@@ -389,7 +389,7 @@ public class GameFrame extends Frame implements Runnable{
             Tank enemy = enemies.get(i);
             if(enemy.isDie()){
                 enemies.remove(i);
-                EnemyPool.returnTank(enemy);
+                EnemyTankPool.returnTank(enemy);
                 i--;
                 continue;
             }
@@ -413,43 +413,51 @@ public class GameFrame extends Frame implements Runnable{
 
         gameMap = GameMap.getInstance(mapType);
 
-        enemyTime = System.currentTimeMillis();
 
         //使用单独一个线程用于控制产生敌人的坦克
         new Thread(){
             @Override
             public void run() {
-                while (true){
-                    long now = System.currentTimeMillis();
-                    boolean stopBorn = (now - enemyTime) > (ENEMY_BORN_INTERVAL * 10);
+                for (int i = 0; i < ENEMY_MAX_COUNT ; i++) {
+
+                    if (gameState == STATE_OVER||gameState == STATE_WIN){
+                        Thread.interrupted();
+                    }
 
                     //只有在游戏运行状态，才能创建敌人
-                    if (gameState != STATE_RUN){
+                    if (gameState != STATE_RUN ){
                         break;
                     }
 
-                    if (!stopBorn){
-                        Tank enemy = EnemyPool.getTank();
-                        enemies.add(enemy);
-                    }else {
-                        break;
-                    }
+                    Tank enemy = EnemyTankPool.getTank();
+                    enemies.add(enemy);
+
                     try {
                         Thread.sleep(ENEMY_BORN_INTERVAL);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
 
+                    count = i+1;
                 }
             }
         }.start();
     }
 
     private void gameWin(){
-        long now = System.currentTimeMillis();
-        if (((now - enemyTime) > (ENEMY_BORN_INTERVAL * ENEMY_MAX_COUNT))&&(enemies.size()==0)){
-            gameState = STATE_WIN;
+        boolean win = true;
+        if (count==10){
+            for (Tank enemy : enemies) {
+                if (!enemy.isDie()){
+                    win = false;
+                    break;
+                }
+            }
+            if (win){
+                gameState = STATE_WIN;
+            }
         }
+
     }
 
     //失败或胜利按键处理
@@ -473,6 +481,8 @@ public class GameFrame extends Frame implements Runnable{
         for (Tank enemy : enemies) {
             enemy.bulletsReturn();
         }
+
+        count = 0;
 
         enemies.clear();
         //清空地图资源
@@ -536,11 +546,6 @@ public class GameFrame extends Frame implements Runnable{
             enemy.drawExplodes(g);
         }
         myTank.drawExplodes(g);
-    }
-
-
-    public static int getGameState() {
-        return gameState;
     }
 
     public static void setGameState(int gameState) {

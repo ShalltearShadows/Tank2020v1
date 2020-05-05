@@ -99,7 +99,7 @@ public class Constant {
     /****************************敌军坦克相关******************************/
 
     //最大敌人坦克数量10
-    public static final int ENEMY_MAX_COUNT = 5;
+    public static final int ENEMY_MAX_COUNT = 10;
 
     //敌人的出生间隔
     public static final int ENEMY_BORN_INTERVAL = 3000;

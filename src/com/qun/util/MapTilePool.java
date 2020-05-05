@@ -56,6 +56,7 @@ public class MapTilePool {
         if (pool.size() == MAX_POOL_SIZE){
             return;
         }
+        mapTile.setType(MapTile.TYPE_NORMAL);
         pool.add(mapTile);
 
     }

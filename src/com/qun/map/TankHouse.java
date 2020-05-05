@@ -42,7 +42,5 @@ public class TankHouse {
         return tiles;
     }
 
-    public void setTiles(List<MapTile> tiles) {
-        this.tiles = tiles;
-    }
+
 }
