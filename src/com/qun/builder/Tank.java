@@ -8,8 +8,9 @@
 package com.qun.builder;
 
 import com.qun.config.Constant;
+import com.qun.logic.Collide;
 import com.qun.pojo.Explode;
-import com.qun.game.GameFrame;
+import com.qun.views.GameFrame;
 import com.qun.map.MapTile;
 import com.qun.pojo.BloodBar;
 import com.qun.pojo.Bullet;

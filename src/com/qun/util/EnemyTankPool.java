@@ -12,7 +12,7 @@ import com.qun.builder.Tank;
 import com.qun.builder.TankBuilder;
 import com.qun.builder.TankDirector;
 import com.qun.config.Constant;
-import com.qun.game.GameFrame;
+import com.qun.views.GameFrame;
 
 import java.util.ArrayList;
 import java.util.List;

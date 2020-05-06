@@ -1,4 +1,4 @@
-package com.qun.game;
+package com.qun.views;
 
 /**
  * Created by IntelliJ IDEA.
@@ -11,7 +11,7 @@ package com.qun.game;
 /*
 * 程序入口
 * */
-public class GameMain {
+public class GameStart {
     public static void main(String[] args) {
         new GameFrame();
     }

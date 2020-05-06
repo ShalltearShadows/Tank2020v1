@@ -9,7 +9,7 @@ package com.qun.map;
 
 import com.qun.pojo.Bullet;
 import com.qun.util.BulletPool;
-import com.qun.util.Collide;
+import com.qun.logic.Collide;
 import com.qun.util.ImageUtil;
 
 import java.awt.*;

@@ -8,7 +8,7 @@
 package com.qun.map;
 
 import com.qun.config.Constant;
-import com.qun.game.GameFrame;
+import com.qun.views.GameFrame;
 import com.qun.util.MapTilePool;
 import com.qun.util.RandomUtil;
 
